@@ -2,7 +2,7 @@
 description: Outils utilisés dans la résolution des challenges.
 ---
 
-# Tools
+# Outils
 
 ## nmap
 

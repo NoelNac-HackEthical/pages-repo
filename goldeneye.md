@@ -13,7 +13,7 @@ icon: caret-right
 
 Commençons les énumérations de façon classique avec Nmap et Gobuster.
 
-### [Nmap](tools.md#nmap)
+### [Nmap](outils.md#nmap)
 
 ```sh
 nmap $IP -A -p- -oN nmap.txt -T4
@@ -38,7 +38,7 @@ Ce qui nous donne déjà une première réponse :
 
 <table><thead><tr><th width="626">Question</th><th>Réponse</th></tr></thead><tbody><tr><td>Use nmap to scan the network for all ports. How many ports are open?</td><td>4</td></tr></tbody></table>
 
-### [Gobuster](tools.md#gobuster)
+### [Gobuster](outils.md#gobuster)
 
 ```sh
 gobuster dir -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -x ".php,.html,.txt" -u $IP -t50
@@ -183,7 +183,7 @@ PASS InvincibleHack3r
 
 ### Hydra
 
-Comme les crédentiels de l'utilisateur boris ne fonctionnent pas pour le serveur pop3, le challenge suggère d'utiliser [Hydra](tools.md#hydra).
+Comme les crédentiels de l'utilisateur boris ne fonctionnent pas pour le serveur pop3, le challenge suggère d'utiliser [Hydra](outils.md#hydra).
 
 Lançons une brute-force hydra pop3 port 55007 avec la wordlist classique rockyou.txt
 
@@ -580,7 +580,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 
 ## \[Task 4] Privilege Escalation
 
-[Transférons les fichiers nécessaires de la machine Kali vers la machine cible](tools.md#transfert-de-fichiers) et utilisons [ma méthode générique d'analyse des possibilités de 'privilege escalation'.](tools.md#privilege-escalation)
+[Transférons les fichiers nécessaires de la machine Kali vers la machine cible](outils.md#transfert-de-fichiers) et utilisons [ma méthode générique d'analyse des possibilités de 'privilege escalation'.](outils.md#privilege-escalation)
 
 ### sudo -l
 
@@ -592,13 +592,13 @@ sudo -l
 
 Inexploitable
 
-### [suid3num.py](tools.md#privilege-escalation)
+### [suid3num.py](outils.md#privilege-escalation)
 
 <figure><img src=".gitbook/assets/suid3num-01.png" alt=""><figcaption><p>suid3num.py</p></figcaption></figure>
 
 Rien d'exploitable à première vue
 
-### [LES (Linux-Exploit-Suggester)](tools.md#privilege-escalation)
+### [LES (Linux-Exploit-Suggester)](outils.md#privilege-escalation)
 
 Bien que le challenge nous indique d'utiliser la vulnérabilité OverlayFs, je préfère rester plus générique dans mon analyse et utiliser l'outil **les.sh.**
 
