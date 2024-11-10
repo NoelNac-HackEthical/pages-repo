@@ -134,7 +134,7 @@ for (var j = 0; j < allElements.length; j++) {
 
 ### Cyber Chef
 
-Le code source nous révèle un hash
+Le code source nous révèle un hash qui ressemble furieusement à des codes ASCII.
 
 ```
 &#73;&#110;&#118;&#105;&#110;&#99;&#105;&#98;&#108;&#101;&#72;&#97;&#99;&#107;&#51;&#114;
