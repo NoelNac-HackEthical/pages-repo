@@ -1,6 +1,6 @@
 ---
-description: Challenge CTF du site TryHackMe
 icon: caret-right
+description: Challenge niveau medium du site TryHackMe
 ---
 
 # \[GoldenEye]\[CTF]\[TryHackMe]
