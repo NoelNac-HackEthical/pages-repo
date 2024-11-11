@@ -168,10 +168,16 @@ Finished
 + End Time:           2024-11-11 16:42:57 (GMT1) (320 seconds)
 ---------------------------------------------------------------------------
 + 1 host(s) tested
-                                                                                                                                                                                                                                               
-┌──(kali㉿kali)-[~/THM]
-└─$ 
+```
 
+```shell-session
+┌──(kali㉿kali)-[~/THM]
+└─$ nikto -h $IP:8080 -id "joker:hannah" | grep interesting                
++ /backup.zip: Potentially interesting backup/cert file found. . See: https://cwe.mitre.org/data/definitions/530.html
++ /administrator/: This might be interesting.
++ /bin/: This might be interesting.
++ /includes/: This might be interesting.
++ /tmp/: This might be interesting.
 ```
 
 ```sh
