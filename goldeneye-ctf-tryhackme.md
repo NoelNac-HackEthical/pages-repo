@@ -9,6 +9,8 @@ description: 'GoldenEye THM Challenge : une solution en Français'
 
 > "_This room will be a guided challenge to hack the James Bond styled box and get root. Credit to creosote for creating this VM."_
 
+[Lien vers Tryhackme.com](https://tryhackme.com/r/room/goldeneye)
+
 ## **\[Task 1] Intro & Enumeration**
 
 Commençons les énumérations de façon classique avec Nmap et Gobuster.
@@ -786,7 +788,7 @@ creating shared library
 uid=0(root) gid=0(root) groups=0(root),24(cdrom),30(dip),46(plugdev),1000(user)
 ```
 
-Comme pour [DirtyCow](goldeneye.md#commencons-par-dirtycow), il ne faut pas se soucier des warnings.
+Comme pour [DirtyCow](goldeneye-ctf-tryhackme.md#commencons-par-dirtycow), il ne faut pas se soucier des warnings.
 
 Voici ce que cela donne:
 
