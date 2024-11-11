@@ -17,4 +17,4 @@ layout:
 
 ### Liste des challenges TryHackMe de ce site
 
-<table><thead><tr><th width="166">CTF</th><th width="130">Niveau</th><th>Principaux outils utilisés</th></tr></thead><tbody><tr><td><a href="goldeneye.md">GoldenEye</a></td><td>Medium</td><td><a href="outils.md#nmap">Nmap</a>,<a href="outils.md"> </a> <a href="outils.md#gobuster">Gobuster</a>, <a href="outils.md#hydra">Hydra</a>, <a href="outils.md#privilege-escalation">suid3num.py</a>,<a href="outils.md#privilege-escalation"> les.sh</a></td></tr></tbody></table>
+<table><thead><tr><th width="166">CTF</th><th width="130">Niveau</th><th>Principaux outils utilisés</th></tr></thead><tbody><tr><td><a href="goldeneye-ctf-tryhackme.md">GoldenEye</a></td><td>Medium</td><td><a href="outils.md#nmap">Nmap</a>,<a href="outils.md"> </a><a href="outils.md#gobuster">Gobuster</a>, <a href="outils.md#hydra">Hydra</a>, <a href="outils.md#privilege-escalation">suid3num.py</a>,<a href="outils.md#privilege-escalation"> les.sh</a></td></tr></tbody></table>
