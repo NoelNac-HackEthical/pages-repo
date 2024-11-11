@@ -6,5 +6,4 @@
 * [GoldenEye CTF TryHackMe](goldeneye-ctf-tryhackme.md)
 * [\[GoldenEye\]\[CTF\]\[TryHackMe\]](goldeneye-ctf-tryhackme-1.md)
 * [\[HA Joker\]\[CTF\]\[TryHackMe\]](ha-joker-ctf-tryhackme.md)
-* [HA Joker CTF TryHackMe](ha-joker-ctf-tryhackme-1.md)
 * [Outils](outils.md)
