@@ -1,9 +1,9 @@
 ---
 icon: caret-right
-description: 'GoldenEye THM Challenge : une solution en Français'
+description: Challenge niveau medium du site TryHackME
 ---
 
-# GoldenEye CTF TryHackMe
+# \[GoldenEye]\[CTF]\[TryHackMe]
 
 <figure><img src=".gitbook/assets/thm-thunder-02 (1).png" alt=""><figcaption><p>Tumbnail [GoldenEye]</p></figcaption></figure>
 
@@ -158,7 +158,7 @@ Ce qui nous donne la réponse à la question suivante.
 
 ### Firefox
 
-Essayons d'abord de nous connecter via Firefox avec l'utilisateur  boris:InvincibleHack3r.
+Essayons d'abord de nous connecter via Firefox avec l'utilisateur boris:InvincibleHack3r.
 
 <figure><img src=".gitbook/assets/sev-home.png" alt=""><figcaption><p>sev-home login</p></figcaption></figure>
 
@@ -168,7 +168,7 @@ L'analyse du code source de la page ne mène à rien d'exploitable.
 
 Comme suggéré dans le challenge et dans la page index, tentons de nous connecter avec l'utilisateur boris:InvincibleHack3r au serveur pop3 sur le port 55007 trouvé avec nmap .
 
-( [ pop3 en ligne de commande](https://www.vircom.com/blog/quick-guide-of-pop3-command-line-to-type-in-telnet/) )
+( [pop3 en ligne de commande](https://www.vircom.com/blog/quick-guide-of-pop3-command-line-to-type-in-telnet/) )
 
 ```sh
 ┌──(kali㉿kali)-[~/THM/goldeneye]
@@ -193,7 +193,7 @@ Lançons une brute-force hydra pop3 port 55007 avec la wordlist classique rockyo
 hydra -l boris  -P /usr/share/wordlists/rockyou.txt pop3://$IP -s 55007 -t 64
 ```
 
-Au bout de 10 minutes, nous n'avons trouvé aucun password et la commande semble partie pour des heures !  Dans les challenges THM, les attaques brut-force répondent en général en quelques minutes, certainement en moins de 10 minutes. (Tout dépend évidemment de la vitesse de calcul de votre machine.)
+Au bout de 10 minutes, nous n'avons trouvé aucun password et la commande semble partie pour des heures ! Dans les challenges THM, les attaques brut-force répondent en général en quelques minutes, certainement en moins de 10 minutes. (Tout dépend évidemment de la vitesse de calcul de votre machine.)
 
 Changeons la wordlist et lançons Hydra avec fasttrack.txt en lieu et place de rockyou.txt.
 
@@ -383,7 +383,7 @@ Since you're a Linux user just point this servers IP to severnaya-station.com in
 
 ### Modifier /etc/hosts
 
-Comme indiqué dans le dernier email de natalya, modifions le fichier /etc/hosts pour y ajouter&#x20;
+Comme indiqué dans le dernier email de natalya, modifions le fichier /etc/hosts pour y ajouter
 
 ```
 <IP de la machine>    severnaya-station.com
@@ -395,13 +395,13 @@ Rendons-nous ensuite sur la page severnaya-station.com/gnocertdir
 
 <figure><img src=".gitbook/assets/gnocertdir01.png" alt=""><figcaption><p>login page</p></figcaption></figure>
 
-Connectons-nous avec les crédentiels  **xenia:RCP90rulez!** trouvés dans le dernier email de natalya et explorons son profil.
+Connectons-nous avec les crédentiels **xenia:RCP90rulez!** trouvés dans le dernier email de natalya et explorons son profil.
 
 <figure><img src=".gitbook/assets/gnocertdir02.png" alt=""><figcaption><p>xenial page</p></figcaption></figure>
 
 <figure><img src=".gitbook/assets/gnocertdir03.png" alt=""><figcaption><p>xenial messages</p></figcaption></figure>
 
-Dans les messages de xenia, nous trouvons **doak** un nouvel utilisateur pop3&#x20;
+Dans les messages de xenia, nous trouvons **doak** un nouvel utilisateur pop3
 
 Comme pour boris et natalya, passons-le à Hydra
 
@@ -479,7 +479,7 @@ Something juicy is located here: /dir007key/for-007.jpg
 Also as you may know, the RCP-90 is vastly superior to any other weapon and License to Kill is the only way to play.
 ```
 
-Le contenu de ce fichier suggère que les crédentiels de l'utilisateur '**admin**' du site se trouvent dans  la page /dir007key/for-007.jpg
+Le contenu de ce fichier suggère que les crédentiels de l'utilisateur '**admin**' du site se trouvent dans la page /dir007key/for-007.jpg
 
 <figure><img src=".gitbook/assets/gnocertdir05.png" alt=""><figcaption><p>dir007key/for-007.jpg</p></figcaption></figure>
 
@@ -502,13 +502,13 @@ For 007
 
 ```
 
-visiblement **eFdpbnRlcjE5OTV4IQ==** est un hash base64  (présence des deux == à la fin du hash) qui décodé donne **xWinter1995x!**
+visiblement **eFdpbnRlcjE5OTV4IQ==** est un hash base64 (présence des deux == à la fin du hash) qui décodé donne **xWinter1995x!**
 
 ### Exploitation du login Administrateur
 
 Nous avons maintenant les crédentiels de **admin:xWinter1995x!**
 
-Retournons sur le site et connectons-nous en tant que admin et constatons que cet utilisateur a visiblement plus de droits, notamment ceux de modifier la configuration du site.&#x20;
+Retournons sur le site et connectons-nous en tant que admin et constatons que cet utilisateur a visiblement plus de droits, notamment ceux de modifier la configuration du site.
 
 <figure><img src=".gitbook/assets/gnocertdir06.png" alt=""><figcaption><p>page login admin</p></figcaption></figure>
 
@@ -528,15 +528,15 @@ Lançons une recherche Google d'exploits pour Moodle du style « **search exploi
 
 <figure><img src=".gitbook/assets/CVE 2021-21809.png" alt="" width="375"><figcaption><p><a href="https://ine.com/blog/cve-2021-21809-moodle-spellchecker-path-authenticated-rce">cve-2021-21809</a></p></figcaption></figure>
 
-**Cette vulnérabilité \[CVE-2021-21809]** **de Moodle permet d'exécuter une commande à distance (reverse-shell) en modifiant le path système du correcteur orthographique.**&#x20;
+**Cette vulnérabilité \[CVE-2021-21809]** **de Moodle permet d'exécuter une commande à distance (reverse-shell) en modifiant le path système du correcteur orthographique.**
 
-Un passage par la base de données des exploits de [Rapid7](https://www.rapid7.com/db/vulnerabilities/moodle-cve-2021-21809/) confirme la vulnérabilité et donne la marche à suivre dans l'annexe suivante :
+Un passage par la base de données des exploits de [Rapid7](https://www.rapid7.com/db/vulnerabilities/moodle-cve-2021-21809/) confirme la vulnérabilité et donne la marche à suivre dans l'annexe suivante :
 
 [https://talosintelligence.com/vulnerability\_reports/TALOS-2021-1277](https://talosintelligence.com/vulnerability\_reports/TALOS-2021-1277)
 
 "_To exploit the shell injection vulnerability, the administrator **sets a path to the legacy server-side spellcheck binary (aspellpath) containing a backtick shell injection** and **sets PSpellShell as the spellchecking engine**. When a server-side spellcheck is requested, lib/editor/tinymce/plugins/spellchecker/classes/PSpellShell.php uses aspellpath to unsafely construct a shell\_exec command. The spellchecker plugin does not have to be enabled._"
 
-Lançons une recherche de  'spell' dans la page Moodle admin de notre cible&#x20;
+Lançons une recherche de 'spell' dans la page Moodle admin de notre cible
 
 <figure><img src=".gitbook/assets/moodle02.png" alt=""><figcaption></figcaption></figure>
 
@@ -749,7 +749,7 @@ Allons à la page /006-final/xvf7-flag/ et <mark style="color:red;">**boom...**<
 | Whats the kernel version? | 3.13.0-32-generic                |
 | What is the root flag?    | 568628e0d993b1973adc718237da6e93 |
 
-## \[ Bonus ] utilisation de overlay.fs exploit&#x20;
+## \[ Bonus ] utilisation de overlay.fs exploit
 
 Le challenge préconise l'utilisation de overlay.fs [https://www.exploit-db.com/exploits/37292](https://www.exploit-db.com/exploits/37292)
 
