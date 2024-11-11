@@ -13,8 +13,14 @@ nmap $IP -A -p- -oN nmap.txt -T4
 ## gobuster
 
 ```shell-session
-gobuster dir -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -x ".php,.html,.txt" -u $IP -t50
+gobuster dir -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -x ".php,.html,.txt,.zip" -u $IP -t50
 ```
+
+```
+gobuster dir -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -x ".php,.html,.txt,.zip" -u http://$IP:8080 -t50 -U <user> -P <password>
+```
+
+
 
 ## Hydra
 
