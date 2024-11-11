@@ -188,3 +188,62 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-11-11 16:35:
 Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-11-11 16:35:36
 
 ```
+
+```
+┌──(kali㉿kali)-[~/THM]
+└─$ gobuster dir -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -x ".php,.html,.txt,.zip" -u http://$IP:8080 -t50 -U joker -P hannah
+===============================================================
+Gobuster v3.6
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://10.10.56.137:8080
+[+] Method:                  GET
+[+] Threads:                 50
+[+] Wordlist:                /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.6
+[+] Auth User:               joker
+[+] Extensions:              php,html,txt,zip
+[+] Timeout:                 10s
+===============================================================
+Starting gobuster in directory enumeration mode
+===============================================================
+/.php                 (Status: 403) [Size: 279]
+/.html                (Status: 403) [Size: 279]
+/images               (Status: 301) [Size: 320] [--> http://10.10.56.137:8080/images/]
+/index.php            (Status: 200) [Size: 10947]
+/media                (Status: 301) [Size: 319] [--> http://10.10.56.137:8080/media/]
+/templates            (Status: 301) [Size: 323] [--> http://10.10.56.137:8080/templates/]
+/modules              (Status: 301) [Size: 321] [--> http://10.10.56.137:8080/modules/]
+/bin                  (Status: 301) [Size: 317] [--> http://10.10.56.137:8080/bin/]
+/plugins              (Status: 301) [Size: 321] [--> http://10.10.56.137:8080/plugins/]
+/includes             (Status: 301) [Size: 322] [--> http://10.10.56.137:8080/includes/]
+/language             (Status: 301) [Size: 322] [--> http://10.10.56.137:8080/language/]
+/README               (Status: 200) [Size: 4494]
+/README.txt           (Status: 200) [Size: 4494]
+/components           (Status: 301) [Size: 324] [--> http://10.10.56.137:8080/components/]
+/cache                (Status: 301) [Size: 319] [--> http://10.10.56.137:8080/cache/]
+/libraries            (Status: 301) [Size: 323] [--> http://10.10.56.137:8080/libraries/]
+/robots               (Status: 200) [Size: 836]
+/robots.txt           (Status: 200) [Size: 836]
+/backup               (Status: 200) [Size: 12133560]
+/backup.zip           (Status: 200) [Size: 12133560]
+/tmp                  (Status: 301) [Size: 317] [--> http://10.10.56.137:8080/tmp/]
+/LICENSE.txt          (Status: 200) [Size: 18092]
+/LICENSE              (Status: 200) [Size: 18092]
+/layouts              (Status: 301) [Size: 321] [--> http://10.10.56.137:8080/layouts/]
+/administrator        (Status: 301) [Size: 327] [--> http://10.10.56.137:8080/administrator/]
+/configuration.php    (Status: 200) [Size: 0]
+/htaccess             (Status: 200) [Size: 3005]
+/htaccess.txt         (Status: 200) [Size: 3005]
+/cli                  (Status: 301) [Size: 317] [--> http://10.10.56.137:8080/cli/]
+/.html                (Status: 403) [Size: 279]
+/.php                 (Status: 403) [Size: 279]
+Progress: 451168 / 1102805 (40.91%)^C
+[!] Keyboard interrupt detected, terminating.
+Progress: 451778 / 1102805 (40.97%)
+===============================================================
+Finished
+===============================================================
+
+```
