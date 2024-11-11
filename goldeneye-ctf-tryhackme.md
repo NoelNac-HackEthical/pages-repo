@@ -5,7 +5,7 @@ description: 'GoldenEye THM Challenge : une solution en Français'
 
 # GoldenEye CTF TryHackMe
 
-<figure><img src=".gitbook/assets/thm-thunder-02 (1).png" alt=""><figcaption><p>Tumbnail GoldenEye</p></figcaption></figure>
+<figure><img src=".gitbook/assets/thm-thunder-02 (1).png" alt=""><figcaption><p>Tumbnail [GoldenEye]</p></figcaption></figure>
 
 > "_This room will be a guided challenge to hack the James Bond styled box and get root. Credit to creosote for creating this VM."_
 
