@@ -1,9 +1,9 @@
 ---
 icon: caret-right
-description: 'GoldenEye THM Challenge : la solution en Français'
+description: 'GoldenEye THM Challenge : une solution en Français'
 ---
 
-# GoldenEye
+# GoldenEye CTF TryHackMe
 
 <figure><img src=".gitbook/assets/thm-thunder-02 (1).png" alt=""><figcaption><p>Tumbnail GoldenEye</p></figcaption></figure>
 
