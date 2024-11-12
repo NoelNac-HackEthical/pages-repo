@@ -322,3 +322,7 @@ abcd1234         (?)
 Use the "--show" option to display all of the cracked passwords reliably
 Session completed.
 ```
+
+### Réponse aux questions (suite)
+
+<table><thead><tr><th width="580">Question</th><th>Réponse</th></tr></thead><tbody><tr><td>At this point we have one user and a url that needs to be aunthenticated, brute force it to get the password, what is that password?</td><td>hannah</td></tr><tr><td>Yeah!! We got the user and password and we see a cms based blog. Now check for directories and files in this port. What directory looks like as admin directory?</td><td>/administrator/</td></tr><tr><td>We need access to the administration of the site in order to get a shell, there is a backup file, What is this file?</td><td>backup.zip</td></tr><tr><td>We have the backup file and now we should look for some information, for example database, configuration files, etc ... But the backup file seems to be encrypted. What is the password?</td><td>hannah</td></tr><tr><td>Remember that... We need access to the administration of the site... Blah blah blah. In our new discovery we see some files that have compromising information, maybe db? ok what if we do a restoration of the database! Some tables must have something like user_table! What is the super duper user?</td><td>admin</td></tr><tr><td>Super Duper User! What is the password?</td><td>abcd1234</td></tr></tbody></table>
