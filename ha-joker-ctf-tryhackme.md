@@ -147,7 +147,7 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-11-11 16:35:
 
 ```
 
-Maintenant que nous avons l'utilisateur **joker** avec son password **hannah**, nous pouvons lacer une exploration plus poussée su site en port 8080 avec Nikto et également Gobuster.
+Maintenant que nous avons l'utilisateur **joker** avec son password **hannah**, nous pouvons lacer une exploration plus poussée du site en port 8080 avec Nikto et Gobuster.
 
 ### Nikto
 
@@ -200,6 +200,8 @@ Maintenant que nous avons l'utilisateur **joker** avec son password **hannah**, 
 ---------------------------------------------------------------------------
 + 1 host(s) tested
 ```
+
+Pour nous simplifie la vie, nous pouvons filtrer les résultats et ne montrer que les infos 'interesting'
 
 ```shell-session
 ┌──(kali㉿kali)-[~/THM]
@@ -272,6 +274,8 @@ Finished
 
 ```
 
+Dans les deux cas, nous détectons la présence d'un répertoire '**/administrator/**' ainsi que l'existence d'un fichier '**backup.zip**' comme évoqués dans le challenge.&#x20;
+
 ### John The Ripper
 
 Téléchargeons le fichier **backup.zip** et attaquons-le avec **John The Ripper**
@@ -316,7 +320,7 @@ total 252
 -rw-r--r-- 1 kali kali 257091 Oct 25  2019 joomladb.sql                                                                                                                   
 ```
 
-Comme indiqué sur le site, cherchons les infos concernant un '**Super Duper User**'
+Comme suggéré dans le challenge, cherchons les infos concernant un '**Super Duper User**'
 
 ```
 ┌──(kali㉿kali)-[~/THM/joker]
@@ -324,7 +328,7 @@ Comme indiqué sur le site, cherchons les infos concernant un '**Super Duper Use
 INSERT INTO `cc1gr_users` VALUES (547,'Super Duper User','admin','admin@example.com','$2y$10$b43UqoH5UpXokj2y9e/8U.LD8T3jEQCuxG2oHzALoJaj9M5unOcbG',0,1,'2019-10-08 12:00:15','2019-10-25 15:20:02','0','{\"admin_style\":\"\",\"admin_language\":\"\",\"language\":\"\",\"editor\":\"\",\"helpsite\":\"\",\"timezone\":\"\"}','0000-00-00 00:00:00',0,'','',0);
 ```
 
-Nous savons maintenant que l'id de ce Super Duper User est 'admin' et nous avons un hash de son password.
+Nous savons maintenant que l'id de ce Super Duper User est '**admin**' et nous avons **un hash de son password**.
 
 Confions ce hash à John The Ripper
 
@@ -348,7 +352,7 @@ Use the "--show" option to display all of the cracked passwords reliably
 Session completed.
 ```
 
-Nous pouvons désormais répondre à toute une série de questions et ces infos vont nous permettre de prendre pied sur la machine cible dans la phase d'exploitation.
+Nous pouvons désormais répondre à toute une série de questions et toutes ces infos vont nous permettre de prendre pied sur la machine cible dans la phase d'exploitation.
 
 ### Réponse aux questions (suite)
 
