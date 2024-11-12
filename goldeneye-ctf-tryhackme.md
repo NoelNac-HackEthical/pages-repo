@@ -461,7 +461,7 @@ password: 4England!
 
 **Ce qui nous donne un nouvel utilisateur du site dr\_doak:4England!**
 
-Connectons-nous au site (d'abord logout por xenial, puis login) et explorons son profil.
+Connectons-nous au site (d'abord logout pour xenial, puis login) et explorons son profil.
 
 <figure><img src=".gitbook/assets/gnocertdir04.png" alt=""><figcaption><p>dr_doak private files</p></figcaption></figure>
 
@@ -502,11 +502,11 @@ For 007
 
 ```
 
-visiblement **eFdpbnRlcjE5OTV4IQ==** est un hash base64 (présence des deux == à la fin du hash) qui décodé donne **xWinter1995x!**
+visiblement **eFdpbnRlcjE5OTV4IQ==** est un hash base64 (présence des deux == à la fin du hash) qui décodé (par exemple [cyberchef](https://gchq.github.io/CyberChef/) ou [dcode fr](https://www.dcode.fr/identification-chiffrement)) donne **xWinter1995x!**
 
 ### Exploitation du login Administrateur
 
-Nous avons maintenant les crédentiels de **admin:xWinter1995x!**
+Nous avons maintenant les crédentiels **admin:xWinter1995x!**
 
 Retournons sur le site et connectons-nous en tant que admin et constatons que cet utilisateur a visiblement plus de droits, notamment ceux de modifier la configuration du site.
 
