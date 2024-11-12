@@ -108,7 +108,7 @@ Finished
 ===============================================================
 ```
 
-### Réponses au questions
+### Réponses aux questions
 
 <table><thead><tr><th width="583">Question</th><th>Réponse</th></tr></thead><tbody><tr><td>What version of Apache is it?</td><td>2.4.29</td></tr><tr><td>What port on this machine not need to be authenticated by user and password?</td><td>80</td></tr><tr><td>There is a file on this port that seems to be secret, what is it?</td><td>secret.txt</td></tr><tr><td>There is another file which reveals information of the backend, what is it?</td><td>phpinfo.php</td></tr><tr><td>When reading the secret file, We find with a conversation that seems contains at least two users and some keywords that can be intersting, what user do you think it is?</td><td>joker</td></tr><tr><td>What port on this machine need to be authenticated by Basic Authentication Mechanism?</td><td>8080</td></tr></tbody></table>
 
@@ -273,19 +273,9 @@ Use the "--show" option to display all of the cracked passwords reliably
 Session completed.
 ```
 
-```
-┌──(kali㉿kali)-[~/THM/joker]
-└─$ unzip backup.zip
-Archive:  backup.zip
-[backup.zip] db/joomladb.sql password: 
+<figure><img src=".gitbook/assets/extract_here.png" alt=""><figcaption><p>Backup.zip extract here</p></figcaption></figure>
 
-```
-
-
-
-<figure><img src="broken-reference" alt=""><figcaption></figcaption></figure>
-
-<figure><img src="broken-reference" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/backup_zip_password.png" alt="" width="375"><figcaption><p>Backup.zip password</p></figcaption></figure>
 
 ```
 ┌──(kali㉿kali)-[~/THM/joker]
@@ -311,4 +301,24 @@ INSERT INTO `cc1gr_users` VALUES (547,'Super Duper User','admin','admin@example.
 ┌──(kali㉿kali)-[~/THM/joker]
 └─$ 
 
+```
+
+```
+┌──(kali㉿kali)-[~/THM/joker]
+└─$ echo '$2y$10$b43UqoH5UpXokj2y9e/8U.LD8T3jEQCuxG2oHzALoJaj9M5unOcbG' > admin.hash
+
+```
+
+```
+┌──(kali㉿kali)-[~/THM/joker]
+└─$ john admin.hash --wordlist=/usr/share/wordlists/rockyou.txt                     
+Using default input encoding: UTF-8
+Loaded 1 password hash (bcrypt [Blowfish 32/64 X3])
+Cost 1 (iteration count) is 1024 for all loaded hashes
+Will run 4 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+abcd1234         (?)     
+1g 0:00:00:05 DONE (2024-11-12 10:01) 0.1919g/s 200.3p/s 200.3c/s 200.3C/s bullshit..piolin
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed.
 ```
