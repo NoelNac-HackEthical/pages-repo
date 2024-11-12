@@ -255,3 +255,21 @@ Finished
 ===============================================================
 
 ```
+
+```
+zip2john backup.zip > backup2john.txt
+```
+
+```
+┌──(kali㉿kali)-[~/THM/joker]
+└─$ john backup2john.txt --wordlist=/usr/share/wordlists/rockyou.txt
+Using default input encoding: UTF-8
+Loaded 1 password hash (PKZIP [32/64])
+Will run 4 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+hannah           (backup.zip)     
+1g 0:00:00:00 DONE (2024-11-12 09:29) 33.33g/s 273066p/s 273066c/s 273066C/s 123456..whitetiger
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed.
+```
+
