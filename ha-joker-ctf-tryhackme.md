@@ -116,11 +116,17 @@ Finished
 
 ## \[Task 2] Bruteforce
 
+Voici l'écran de 'Login' que nous allons attaquer
+
 <figure><img src=".gitbook/assets/login_8080.png" alt=""><figcaption><p>Ecran de login</p></figcaption></figure>
+
+### Burp
 
 Lançons Burp avec "Proxy Interception" sur "on" et entrons "joker" et "password".
 
 <figure><img src=".gitbook/assets/burp_joker_password.png" alt=""><figcaption><p>Ecran de Burp Suite avec essai de login joker:password</p></figcaption></figure>
+
+### Hydra
 
 ```sh
 ┌──(kali㉿kali)-[~/THM]
@@ -136,6 +142,8 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-11-11 16:35:
 Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-11-11 16:35:36
 
 ```
+
+### Nikto
 
 ```sh
 ┌──(kali㉿kali)-[~/THM]
@@ -197,6 +205,8 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-11-11 16:35:
 + /tmp/: This might be interesting.
 ```
 
+### Gobuster
+
 ```
 ┌──(kali㉿kali)-[~/THM]
 └─$ gobuster dir -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -x ".php,.html,.txt,.zip" -u http://$IP:8080 -t50 -U joker -P hannah
@@ -256,6 +266,10 @@ Finished
 
 ```
 
+### John The Ripper
+
+#### backup.zip
+
 ```
 zip2john backup.zip > backup2john.txt
 ```
@@ -276,6 +290,8 @@ Session completed.
 <figure><img src=".gitbook/assets/extract_here.png" alt=""><figcaption><p>Backup.zip extract here</p></figcaption></figure>
 
 <figure><img src=".gitbook/assets/backup_zip_password.png" alt="" width="375"><figcaption><p>Backup.zip password</p></figcaption></figure>
+
+#### Joomla
 
 ```
 ┌──(kali㉿kali)-[~/THM/joker]
