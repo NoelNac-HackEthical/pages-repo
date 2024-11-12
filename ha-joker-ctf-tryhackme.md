@@ -126,7 +126,11 @@ Lançons Burp avec "Proxy Interception" sur "on" et entrons "joker" et "password
 
 <figure><img src=".gitbook/assets/burp_joker_password.png" alt=""><figcaption><p>Ecran de Burp Suite avec essai de login joker:password</p></figcaption></figure>
 
-### Hydra
+Nous constatons que la validation du login est du type **basic user:password en base 64**.
+
+Nous pouvons alors lancer [hydra en mode http-get](https://0xshin.hashnode.dev/basic-http-authentication-and-brute-forcing-w-hydra)
+
+### [Hydra](outils.md#hydra)
 
 ```sh
 ┌──(kali㉿kali)-[~/THM]
@@ -142,6 +146,8 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-11-11 16:35:
 Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-11-11 16:35:36
 
 ```
+
+Maintenant que nous avons l'utilisateur **joker** avec son password **hannah**, nous pouvons lacer une exploration plus poussée su site en port 8080 avec Nikto et également Gobuster.
 
 ### Nikto
 
@@ -268,6 +274,8 @@ Finished
 
 ### John The Ripper
 
+Téléchargeons le fichier **backup.zip** et attaquons-le avec **John The Ripper**
+
 #### backup.zip
 
 ```
@@ -293,6 +301,8 @@ Session completed.
 
 #### Joomla
 
+Après avoir extrait le fichier backup.zip, intéressons-nous au **fichier joomladb.sql trouvé dans le sous-répertoire backup/db**&#x20;
+
 ```
 ┌──(kali㉿kali)-[~/THM/joker]
 └─$ ls -l backup
@@ -303,21 +313,20 @@ drwxr-xr-x 17 kali kali 4096 Oct 25  2019 site
 ┌──(kali㉿kali)-[~/THM/joker]
 └─$ ls -l backup/db
 total 252
--rw-r--r-- 1 kali kali 257091 Oct 25  2019 joomladb.sql
-                                                                                                                       
-┌──(kali㉿kali)-[~/THM/joker]
-└─$ 
+-rw-r--r-- 1 kali kali 257091 Oct 25  2019 joomladb.sql                                                                                                                   
 ```
+
+Comme indiqué sur le site, cherchons les infos concernant un '**Super Duper User**'
 
 ```
 ┌──(kali㉿kali)-[~/THM/joker]
 └─$ cat backup/db/joomladb.sql | grep Duper
 INSERT INTO `cc1gr_users` VALUES (547,'Super Duper User','admin','admin@example.com','$2y$10$b43UqoH5UpXokj2y9e/8U.LD8T3jEQCuxG2oHzALoJaj9M5unOcbG',0,1,'2019-10-08 12:00:15','2019-10-25 15:20:02','0','{\"admin_style\":\"\",\"admin_language\":\"\",\"language\":\"\",\"editor\":\"\",\"helpsite\":\"\",\"timezone\":\"\"}','0000-00-00 00:00:00',0,'','',0);
-                                                                                                                                                                                                                                               
-┌──(kali㉿kali)-[~/THM/joker]
-└─$ 
-
 ```
+
+Nous savons maintenant que l'id de ce Super Duper User est 'admin' et nous avons un hash de son password.
+
+Confions ce hash à John The Ripper
 
 ```
 ┌──(kali㉿kali)-[~/THM/joker]
@@ -338,6 +347,8 @@ abcd1234         (?)
 Use the "--show" option to display all of the cracked passwords reliably
 Session completed.
 ```
+
+Nous pouvons désormais répondre à toute une série de questions et ces infos vont nous permettre de prendre pied sur la machine cible dans la phase d'exploitation.
 
 ### Réponse aux questions (suite)
 
