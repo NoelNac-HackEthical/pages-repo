@@ -108,6 +108,8 @@ Finished
 ===============================================================
 ```
 
+Ces deux scans nous permettre de répondre aux premières questions du challenge.
+
 ### Réponses aux questions
 
 <table><thead><tr><th width="583">Question</th><th>Réponse</th></tr></thead><tbody><tr><td>What version of Apache is it?</td><td>2.4.29</td></tr><tr><td>What port on this machine not need to be authenticated by user and password?</td><td>80</td></tr><tr><td>There is a file on this port that seems to be secret, what is it?</td><td>secret.txt</td></tr><tr><td>There is another file which reveals information of the backend, what is it?</td><td>phpinfo.php</td></tr><tr><td>When reading the secret file, We find with a conversation that seems contains at least two users and some keywords that can be intersting, what user do you think it is?</td><td>joker</td></tr><tr><td>What port on this machine need to be authenticated by Basic Authentication Mechanism?</td><td>8080</td></tr></tbody></table>
