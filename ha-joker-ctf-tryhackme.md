@@ -273,3 +273,42 @@ Use the "--show" option to display all of the cracked passwords reliably
 Session completed.
 ```
 
+```
+┌──(kali㉿kali)-[~/THM/joker]
+└─$ unzip backup.zip
+Archive:  backup.zip
+[backup.zip] db/joomladb.sql password: 
+
+```
+
+
+
+<figure><img src="broken-reference" alt=""><figcaption></figcaption></figure>
+
+<figure><img src="broken-reference" alt=""><figcaption></figcaption></figure>
+
+```
+┌──(kali㉿kali)-[~/THM/joker]
+└─$ ls -l backup
+total 8
+drwxr-xr-x  2 kali kali 4096 Oct 25  2019 db
+drwxr-xr-x 17 kali kali 4096 Oct 25  2019 site
+                                                                                                                       
+┌──(kali㉿kali)-[~/THM/joker]
+└─$ ls -l backup/db
+total 252
+-rw-r--r-- 1 kali kali 257091 Oct 25  2019 joomladb.sql
+                                                                                                                       
+┌──(kali㉿kali)-[~/THM/joker]
+└─$ 
+```
+
+```
+┌──(kali㉿kali)-[~/THM/joker]
+└─$ cat backup/db/joomladb.sql | grep Duper
+INSERT INTO `cc1gr_users` VALUES (547,'Super Duper User','admin','admin@example.com','$2y$10$b43UqoH5UpXokj2y9e/8U.LD8T3jEQCuxG2oHzALoJaj9M5unOcbG',0,1,'2019-10-08 12:00:15','2019-10-25 15:20:02','0','{\"admin_style\":\"\",\"admin_language\":\"\",\"language\":\"\",\"editor\":\"\",\"helpsite\":\"\",\"timezone\":\"\"}','0000-00-00 00:00:00',0,'','',0);
+                                                                                                                                                                                                                                               
+┌──(kali㉿kali)-[~/THM/joker]
+└─$ 
+
+```
