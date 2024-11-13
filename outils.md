@@ -62,3 +62,13 @@ Voici la méthode générique que j'utilise pour trouver les possibilités de 'p
 2. [suid3num.py](https://github.com/Anon-Exploiter/SUID3NUM/tree/master)
 3. [les.sh](https://github.com/The-Z-Labs/linux-exploit-suggester)
 4. [linpeas.sh](https://github.com/peass-ng/PEASS-ng/tree/master/linPEAS)
+
+## Consolidation d'un Shell
+
+```shell
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+ctrl Z
+stty raw -echo; fg
+export TERM=xterm  
+(stty cols 132 rows 34)
+```
