@@ -403,3 +403,7 @@ www-data@ubuntu:/$
 ```
 
 Comme à chaque fois, consolidons ce shell
+
+## \[Task 4] Escalade des privilèges
+
+A priori nous devrions passer par[ ma méthode d'escalade des privilèges habituelle](outils.md#privilege-escalation) mais comme nous avons constaté que l'utilisateur courant www-data était membre du groupe **lxd, n**ous allons pouvoir faire une escalade de privilèges en utilisant une faille dans la mise en place de conteneurs LXD
