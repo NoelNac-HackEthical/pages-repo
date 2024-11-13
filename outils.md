@@ -72,3 +72,7 @@ stty raw -echo; fg
 export TERM=xterm  
 (stty cols 132 rows 34)
 ```
+
+## Escalade de privilèges via LXD
+
+Basé sur cet article: [LXC/LXD (Linux Container/Daemon) Privilege Escalation](https://exploit-notes.hdks.org/exploit/linux/container/lxc-lxd-privilege-escalation/)
