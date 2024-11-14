@@ -77,6 +77,13 @@ export TERM=xterm
 
 Basé sur cet article: [LXC/LXD (Linux Container/Daemon) Privilege Escalation](https://exploit-notes.hdks.org/exploit/linux/container/lxc-lxd-privilege-escalation/)
 
+Vérifiez que l'utilisateur sur la machine cible fait partie du groupe lxd
+
+```shell
+id
+uid=33(www-data) gid=33(www-data) groups=33(www-data),115(lxd)
+```
+
 ### Sur la machine Kali
 
 Préparez un conteneur linux et lancer un serveur http
