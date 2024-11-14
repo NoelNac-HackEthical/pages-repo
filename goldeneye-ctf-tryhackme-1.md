@@ -1,11 +1,9 @@
 ---
-description: Challenge niveau medium du site TryHackMe
 icon: caret-right
+description: Challenge niveau medium du site TryHackMe
 ---
 
 # \[GoldenEye]\[CTF]\[TryHackMe]
-
-Page de réserve pour le challenge \[GoldenEye]
 
 <figure><img src=".gitbook/assets/thm-thunder-02 (1).png" alt=""><figcaption><p>Tumbnail [GoldenEye]</p></figcaption></figure>
 
@@ -582,7 +580,6 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 
 ### <mark style="color:orange;">**Nous voilà entrés dans la machine**</mark>
 
-
 ## \[Task 4] Privilege Escalation
 
 [Transférons les fichiers nécessaires de la machine Kali vers la machine cible](outils.md#transfert-de-fichiers) et utilisons [ma méthode générique d'analyse des possibilités de 'privilege escalation'.](outils.md#privilege-escalation)
@@ -791,7 +788,7 @@ creating shared library
 uid=0(root) gid=0(root) groups=0(root),24(cdrom),30(dip),46(plugdev),1000(user)
 ```
 
-Comme pour [DirtyCow](goldeneye-ctf-tryhackme.md#commencons-par-dirtycow), il ne faut pas se soucier des warnings.
+Comme pour [DirtyCow](broken-reference), il ne faut pas se soucier des warnings.
 
 Voici ce que cela donne:
 
