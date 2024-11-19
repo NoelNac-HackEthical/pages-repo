@@ -133,7 +133,7 @@ lxc start mycontainer
 Lancez un Shell (note: l'image Alpine ne supporte qu'un shell sh)
 
 ```
-lxc exec testcontainer /bin/sh
+lxc exec mycontainer /bin/sh
 ```
 
 Vérifiez que vous êtes bien root
