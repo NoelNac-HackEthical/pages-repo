@@ -112,7 +112,7 @@ Créez un nouveau conteneur '**mycontainer**' basé sur l'image '**myimage**' qu
 lxc init myimage mycontainer -c security.privileged=true
 ```
 
-En cas de message **“**No storage pool found. Please create a new storage pool**.”** initialisez LXD d'abord et relancez la commande.
+En cas de message **“**&#x4E;o storage pool found. Please create a new storage poo&#x6C;**.”** initialisez LXD d'abord et relancez la commande.
 
 ```
 lxd init

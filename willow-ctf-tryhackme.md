@@ -13,7 +13,25 @@ _"What lies under the Willow Tree?_"
 
 <figure><img src=".gitbook/assets/cyberchef_willow.png" alt=""><figcaption><p>cyberchef from hex</p></figcaption></figure>
 
+extrait du site[ https://muirlandoracle.co.uk/2020/01/29/rsa-encryption/](https://muirlandoracle.co.uk/2020/01/29/rsa-encryption/) donné en indice
 
+```
+Final Keys:
+
+Public Encryption Key: (57, 391)
+Private Decryption Key: (1161, 391)
+Example Usage:
+
+15<sup>57</sup> % 391 = 304
+304<sup>1161</sup> % 391 = 15
+
+```
+
+<figure><img src=".gitbook/assets/rsa_calculation.png" alt=""><figcaption></figcaption></figure>
+
+En français: le \<caractère décodé> =  \<caractère encodé> exposant \<première clé privée> modulo \<deuxième clé privée>.
+
+Ce qui nous donne codé en python: **answer = (int(chunk) \*\* d)  % n**&#x20;
 
 {% code overflow="wrap" %}
 ```
