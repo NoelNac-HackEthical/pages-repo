@@ -126,7 +126,7 @@ L'énumération Gobuster ne nous mène à rien.
 
 ## \[Task 2] Exploitation
 
-### 1. Exploitation de la première page
+### Exploitation de la première page
 
 Rendons-nous sur le site
 
@@ -154,9 +154,9 @@ Nous pouvons constater que le code résultant pourrait bien correspondre à une 
 
 Profitons-en pour nettoyer le fichier first-page.txt de sa première ligne pour conserver uniquement les data que nous sauvegardons dans un fichier private-key.tx
 
-### 2. Exploitation du port NFS
+### Exploitation du port NFS
 
-### 3. Décodage RSA
+### Décodage RSA
 
 
 
