@@ -126,7 +126,7 @@ L'énumération Gobuster ne nous mène à rien.
 
 ## \[Task 2] Exploitation
 
-### Première page
+### 1. Exploitation de la première page
 
 Rendons-nous sur le site
 
@@ -140,21 +140,25 @@ Faisons un copier coller des data vers cyberchef et utilisons la baguette magiqu
 
 Sauvegardons le résultat dans un fichier first-page.txt
 
-Nous pouvons constater que le code pourrait correspondre à une clé privée SSH
-
 ```
 Hey Willow, here's your SSH Private key -- you know where the decryption key is!
 2367 2367 2367 2367 2367 9709 8600 28638 18410 1735 33029 16186 28374 37248 33029 26842 1
 6186 18410 23219 37248 11339 8600 33029 35670 8600 31131 2367 2367 2367 2367 2367 14422 26842 9450 14605 19276 2367 11339 33006 36500 4198 33781 33029 11405 5267 8600 1735 17632 16186 31131 26842 11339 8600 35734 14422 35734 8600 35670 2367 18410 35243 37438 14605 33781 
 ```
 
-**2367 2367 2367 2367 2367** pourrait correspondre aux **cinq tirets** du début d'une clé privée SSH
+Nous pouvons constater que le code résultant pourrait bien correspondre à une clé privée SSH de par la présence de **2367 2367 2367 2367 2367** en début de code et qui pourrait bien correspondre aux **cinq tirets** du début d'une clé privée SSH
 
-&#x20;\-----BEGIN RSA PRIVATE KEY-----
+&#x20;**-----**&#x42;EGIN RSA PRIVATE KEY-----
 
 (idem pour les cinq tirets à la fin)
 
 Profitons-en pour nettoyer le fichier first-page.txt de sa première ligne pour conserver uniquement les data que nous sauvegardons dans un fichier private-key.tx
+
+### 2. Exploitation du port NFS
+
+### 3. Décodage RSA
+
+
 
 extrait du site[ https://muirlandoracle.co.uk/2020/01/29/rsa-encryption/](https://muirlandoracle.co.uk/2020/01/29/rsa-encryption/) donné en indice
 
@@ -236,3 +240,8 @@ TsH6aY4QbgnEMuA+Errb/uf/5MAhWDMqLBhi42kxaXZ1e3ZMz2penCZFf/nofbLc
                                                                                                                        
 
 ```
+
+## \[Task 3] Prise pied sur la machine cible
+
+## \[Task 4] Escalade de privilèges
+
