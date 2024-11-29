@@ -15,7 +15,7 @@ _"What lies under the Willow Tree?_"
 
 Commençons les énumérations de façon classique avec Nmap et Gobuster.
 
-### Nmap
+### [Nmap](outils.md#nmap)
 
 ```
 ┌──(kali㉿kali)-[~/THM/willow]
@@ -92,7 +92,7 @@ Nmap done: 1 IP address (1 host up) scanned in 33.34 seconds
 
 Nous constatons qu'en plus du **port 22/tcp open ssh** et du **port 80/tcp open http**, nous touvons le port **2049/tcp open nfs** qui nous indique une possibilité de partage de fichiers via le réseau.
 
-### Gobuster
+### [Gobuster](outils.md#gobuster)
 
 <pre><code>┌──(kali㉿kali)-[~/THM/willow]
 └─$ gobuster dir -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -x ".php,.html,.txt,.zip" -u http://$IP -t 200
