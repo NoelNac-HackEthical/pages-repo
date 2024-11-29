@@ -181,7 +181,7 @@ En français: le \<caractère décodé> =  \<caractère encodé> exposant \<prem
 Ce qui nous donne codé en python: **answer = (int(chunk) \*\* d)  % n**&#x20;
 
 {% code overflow="wrap" %}
-```
+```python
 ┌──(kali㉿kali)-[~/THM/willow]
 └─$ cat decode_rsa.py           
 #!/user/bin/env python
@@ -204,10 +204,9 @@ print (decoded_string)
 ```
 {% endcode %}
 
-```
-┌──(kali㉿kali)-[~/THM/willow]
-└─$ python3 decode_rsa.py 
------BEGIN RSA PRIVATE KEY-----
+<pre><code>┌──(kali㉿kali)-[~/THM/willow]
+<strong>└─$ python3 decode_rsa.py 
+</strong>-----BEGIN RSA PRIVATE KEY-----
 Proc-Type: 4,ENCRYPTED
 DEK-Info: AES-128-CBC,2E2F405A3529F92188B453CAA6E33270
 
@@ -237,11 +236,13 @@ W0pyDdA8so0zkTTd7gm6WFarM7ywGec5rX08gT5v3dDYbPA46LJVprtA+D3ymeR4
 l3xMq6RDfzFIFa6MWS8yCK67p7mPxSfqvC5NDMONQ/fz+7fO3/pjKBYZYLuchpk4
 TsH6aY4QbgnEMuA+Errb/uf/5MAhWDMqLBhi42kxaXZ1e3ZMz2penCZFf/nofbLc
 -----END RSA PRIVATE KEY-----
-                                                                                                                       
+</code></pre>
 
-```
+Faisons un copier coller vers un fichier id\_rsa ( ou python3 decode\_rsa.py > id\_rsa)
 
 ## \[Task 3] Prise pied sur la machine cible
 
 ## \[Task 4] Escalade de privilèges
+
+## \[Task 5] Réponses aux questions
 
