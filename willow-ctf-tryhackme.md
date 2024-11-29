@@ -11,7 +11,150 @@ _"What lies under the Willow Tree?_"
 
 [Lien vers TryHackMe.com](https://tryhackme.com/r/room/willow)
 
+## \[Task 1] Enumérations
+
+Commençons les énumérations de façon classique avec Nmap et Gobuster.
+
+### Nmap
+
+```
+┌──(kali㉿kali)-[~/THM/willow]
+└─$ nmap $IP -A -p- -oN nmap.txt -T4 
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-11-29 15:37 CET
+Nmap scan report for 10.10.65.194
+Host is up (0.025s latency).
+Not shown: 65531 closed tcp ports (reset)
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 6.7p1 Debian 5 (protocol 2.0)
+| ssh-hostkey: 
+|   1024 43:b0:87:cd:e5:54:09:b1:c1:1e:78:65:d9:78:5e:1e (DSA)
+|   2048 c2:65:91:c8:38:c9:cc:c7:f9:09:20:61:e5:54:bd:cf (RSA)
+|   256 bf:3e:4b:3d:78:b6:79:41:f4:7d:90:63:5e:fb:2a:40 (ECDSA)
+|_  256 2c:c8:87:4a:d8:f6:4c:c3:03:8d:4c:09:22:83:66:64 (ED25519)
+80/tcp   open  http    Apache httpd 2.4.10 ((Debian))
+|_http-server-header: Apache/2.4.10 (Debian)
+|_http-title: Recovery Page
+111/tcp  open  rpcbind 2-4 (RPC #100000)
+| rpcinfo: 
+|   program version    port/proto  service
+|   100000  2,3,4        111/tcp   rpcbind
+|   100000  2,3,4        111/udp   rpcbind
+|   100000  3,4          111/tcp6  rpcbind
+|   100000  3,4          111/udp6  rpcbind
+|   100003  2,3,4       2049/tcp   nfs
+|   100003  2,3,4       2049/tcp6  nfs
+|   100003  2,3,4       2049/udp   nfs
+|   100003  2,3,4       2049/udp6  nfs
+|   100005  1,2,3      43766/tcp6  mountd
+|   100005  1,2,3      51926/udp6  mountd
+|   100005  1,2,3      59542/udp   mountd
+|   100005  1,2,3      60821/tcp   mountd
+|   100021  1,3,4      36839/udp6  nlockmgr
+|   100021  1,3,4      39101/udp   nlockmgr
+|   100021  1,3,4      44704/tcp   nlockmgr
+|   100021  1,3,4      55780/tcp6  nlockmgr
+|   100024  1          37858/tcp6  status
+|   100024  1          41654/tcp   status
+|   100024  1          41977/udp   status
+|   100024  1          43065/udp6  status
+|   100227  2,3         2049/tcp   nfs_acl
+|   100227  2,3         2049/tcp6  nfs_acl
+|   100227  2,3         2049/udp   nfs_acl
+|_  100227  2,3         2049/udp6  nfs_acl
+2049/tcp open  nfs     2-4 (RPC #100003)
+No exact OS matches for host (If you know what OS is running on it, see https://nmap.org/submit/ ).
+TCP/IP fingerprint:
+OS:SCAN(V=7.94SVN%E=4%D=11/29%OT=22%CT=1%CU=35154%PV=Y%DS=2%DC=T%G=Y%TM=674
+OS:9D1DE%P=x86_64-pc-linux-gnu)SEQ(SP=FA%GCD=1%ISR=10E%TI=Z%CI=I%II=I%TS=8)
+OS:SEQ(SP=FB%GCD=1%ISR=10E%TI=Z%CI=I%II=I%TS=8)SEQ(SP=FD%GCD=2%ISR=10E%TI=Z
+OS:%CI=I%II=I%TS=8)SEQ(SP=FE%GCD=1%ISR=10F%TI=Z%CI=I%II=I%TS=8)SEQ(SP=FF%GC
+OS:D=1%ISR=10E%TI=Z%CI=I%II=I%TS=8)OPS(O1=M508ST11NW7%O2=M508ST11NW7%O3=M50
+OS:8NNT11NW7%O4=M508ST11NW7%O5=M508ST11NW7%O6=M508ST11)WIN(W1=68DF%W2=68DF%
+OS:W3=68DF%W4=68DF%W5=68DF%W6=68DF)ECN(R=Y%DF=Y%T=40%W=6903%O=M508NNSNW7%CC
+OS:=Y%Q=)T1(R=Y%DF=Y%T=40%S=O%A=S+%F=AS%RD=0%Q=)T2(R=N)T3(R=N)T4(R=Y%DF=Y%T
+OS:=40%W=0%S=A%A=Z%F=R%O=%RD=0%Q=)T5(R=Y%DF=Y%T=40%W=0%S=Z%A=S+%F=AR%O=%RD=
+OS:0%Q=)T6(R=Y%DF=Y%T=40%W=0%S=A%A=Z%F=R%O=%RD=0%Q=)T7(R=Y%DF=Y%T=40%W=0%S=
+OS:Z%A=S+%F=AR%O=%RD=0%Q=)U1(R=Y%DF=N%T=40%IPL=164%UN=0%RIPL=G%RID=G%RIPCK=
+OS:G%RUCK=G%RUD=G)IE(R=Y%DFI=N%T=40%CD=S)
+
+Network Distance: 2 hops
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+TRACEROUTE (using port 1025/tcp)
+HOP RTT      ADDRESS
+1   23.80 ms 10.9.0.1
+2   23.88 ms 10.10.65.194
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 33.34 seconds
+
+```
+
+Nous constatons qu'en plus du **port 22/tcp open ssh** et du **port 80/tcp open http**, nous touvons le port **2049/tcp open nfs** qui nous indique une possibilité de partage de fichiers via le réseau.
+
+### Gobuster
+
+<pre><code>┌──(kali㉿kali)-[~/THM/willow]
+└─$ gobuster dir -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -x ".php,.html,.txt,.zip" -u http://$IP -t 200
+===============================================================
+Gobuster v3.6
+by OJ Reeves (@TheColonial) &#x26; Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://10.10.65.194
+[+] Method:                  GET
+[+] Threads:                 200
+[+] Wordlist:                /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.6
+[+] Extensions:              php,html,txt,zip
+[+] Timeout:                 10s
+===============================================================
+Starting gobuster in directory enumeration mode
+===============================================================
+/index.html           (Status: 200) [Size: 20474]
+/.html                (Status: 403) [Size: 277]
+/.html                (Status: 403) [Size: 277]
+/server-status        (Status: 403) [Size: 277]
+<strong>Progress: 1102800 / 1102805 (100.00%)
+</strong>===============================================================
+Finished
+===============================================================
+
+</code></pre>
+
+L'énumération Gobuster ne nous mène à rien.
+
+## \[Task 2] Exploitation
+
+### Première page
+
+Rendons-nous sur le site
+
+<figure><img src=".gitbook/assets/firefox_first_page.png" alt=""><figcaption><p>Firefox first page</p></figcaption></figure>
+
+Faisons un copier coller des data vers cyberchef et utilisons la baguette magique proposée
+
+<figure><img src=".gitbook/assets/cyberchef_magic (1).png" alt=""><figcaption><p>cyberchef magic</p></figcaption></figure>
+
 <figure><img src=".gitbook/assets/cyberchef_willow.png" alt=""><figcaption><p>cyberchef from hex</p></figcaption></figure>
+
+Sauvegardons le résultat dans un fichier first-page.txt
+
+Nous pouvons constater que le code pourrait correspondre à une clé privée SSH
+
+```
+Hey Willow, here's your SSH Private key -- you know where the decryption key is!
+2367 2367 2367 2367 2367 9709 8600 28638 18410 1735 33029 16186 28374 37248 33029 26842 1
+6186 18410 23219 37248 11339 8600 33029 35670 8600 31131 2367 2367 2367 2367 2367 14422 26842 9450 14605 19276 2367 11339 33006 36500 4198 33781 33029 11405 5267 8600 1735 17632 16186 31131 26842 11339 8600 35734 14422 35734 8600 35670 2367 18410 35243 37438 14605 33781 
+```
+
+**2367 2367 2367 2367 2367** pourrait correspondre aux **cinq tirets** du début d'une clé privée SSH
+
+&#x20;\-----BEGIN RSA PRIVATE KEY-----
+
+(idem pour les cinq tirets à la fin)
+
+Profitons-en pour nettoyer le fichier first-page.txt de sa première ligne pour conserver uniquement les data que nous sauvegardons dans un fichier private-key.tx
 
 extrait du site[ https://muirlandoracle.co.uk/2020/01/29/rsa-encryption/](https://muirlandoracle.co.uk/2020/01/29/rsa-encryption/) donné en indice
 
