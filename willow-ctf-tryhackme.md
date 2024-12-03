@@ -287,7 +287,7 @@ Nous aurions tout aussi bien pu utiliser un calculateur RSA en ligne sans trop s
 
 Le [RSA Express Encryption/Decryption Calculator](https://www.cs.drexel.edu/~popyack/Courses/CSP/Fa17/notes/10.1_Cryptography/RSA_Express_EncryptDecrypt_v2.html) fait très bien l'affaire et son utilisation est évidente.
 
-
+<figure><img src=".gitbook/assets/rsa_calculator.png" alt=""><figcaption><p>RSA Calculator</p></figcaption></figure>
 
 ## \[Task 3] Prise pied sur la machine cible
 
