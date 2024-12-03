@@ -5,7 +5,7 @@ description: Challenge niveau medium du site TryHackMe
 
 # \[Willow]\[CTF]\[TryHackMe]
 
-<figure><img src=".gitbook/assets/willow-thm-thunder-en-cours-de-redaction.png" alt=""><figcaption><p>Willow CTF Thumbnail</p></figcaption></figure>
+<figure><img src=".gitbook/assets/willow-thm-thunder-01.png" alt=""><figcaption><p>Willow CTF Thumbnail</p></figcaption></figure>
 
 _"What lies under the Willow Tree?_"
 
