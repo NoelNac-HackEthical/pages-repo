@@ -156,9 +156,49 @@ Profitons-en pour nettoyer le fichier first-page.txt de sa première ligne pour 
 
 ### Exploitation du port NFS
 
+Nmap nous a montré que le port 2049/tcp open nfs était ouvert et qu'il existait une possiblité de partage de fichiers via le réseau.&#x20;
+
+Explorons les partages nfs disponibles
+
+```
+┌──(kali㉿kali)-[~/THM/willow]
+└─$ showmount -e $IP        
+Export list for 10.10.73.141:
+/var/failsafe *
+```
+
+Faisons un mount de ce répertoire dans notre machine kali
+
+```
+┌──(kali㉿kali)-[~/THM/willow]
+└─$ mkdir nfs      
+                                                                                                                       
+┌──(kali㉿kali)-[~/THM/willow]
+└─$ sudo mount -t nfs $IP:/var/failsafe /home/kali/THM/willow/nfs                                                                                                                    
+```
+
+et voyons ce qu'il contient
+
+```
+┌──(kali㉿kali)-[~/THM/willow]
+└─$ cd nfs   
+                                                                                                                       
+┌──(kali㉿kali)-[~/THM/willow/nfs]
+└─$ ls -l
+total 4
+-rw-r--r-- 1 root root 62 Jan 30  2020 rsa_keys
+                                                                                                                       
+┌──(kali㉿kali)-[~/THM/willow/nfs]
+└─$ cat rsa_keys  
+Public Key Pair: (23, 37627)
+Private Key Pair: (61527, 37627)
+```
+
+Nous avons maintenant à notre disposition deux paires de clés RSA
+
 ### Décodage RSA
 
-Commençons par nous intéresser au codage décodage comme présenté dans le site site[ https://muirlandoracle.co.uk/2020/01/29/rsa-encryption/](https://muirlandoracle.co.uk/2020/01/29/rsa-encryption/) donné en indice
+Commençons par nous intéresser au codage décodage comme présenté dans le site[ https://muirlandoracle.co.uk/2020/01/29/rsa-encryption/](https://muirlandoracle.co.uk/2020/01/29/rsa-encryption/) donné en indice
 
 extrait du site
 
@@ -176,7 +216,7 @@ Example Usage:
 
 <figure><img src=".gitbook/assets/rsa_calculation.png" alt=""><figcaption></figcaption></figure>
 
-En français: le \<caractère décodé> =  \<caractère encodé> exposant \<première clé privée> modulo \<deuxième clé privée>.
+**En français: le \<caractère décodé> =  \<caractère encodé> exposant \<première clé privée> modulo \<deuxième clé privée>.**
 
 Ce qui nous donne  en python: **answer = (int(chunk) \*\* d)  % n**&#x20;
 
