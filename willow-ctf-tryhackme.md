@@ -476,7 +476,7 @@ Contenu de root.txt
 THM{find_a_red_rose_on_the_grave}
 ```
 
-And this complete the vote of the Belgian jury ☺️✌️
+_<mark style="color:orange;">And this complete the vote of the Belgian jury</mark>_ ☺️✌️
 
 ## \[Task 5] Réponses aux questions
 
