@@ -382,6 +382,8 @@ THM{beneath_the_weeping_willow_tree}
 
 ## \[Task 4] Escalade de privilèges
 
+### Sudo -l
+
 ```
 willow@willow-tree:~$ sudo -l
 Matching Defaults entries for willow on willow-tree:
@@ -398,8 +400,6 @@ Voyons ce qu'il y a dans /dev
 <figure><img src=".gitbook/assets/hidden_backup.png" alt=""><figcaption></figcaption></figure>
 
 Le répertoire hidden\_backup paraît très intéressant.  Montons-le avec sudo
-
-
 
 ```
 willow@willow-tree:~$ mkdir hb
@@ -441,13 +441,47 @@ root:7QvbvBTvwPspUK
 willow:U0ZZJLGYhNAT2s
 ```
 
-Nous avons maintenant les crésentiels de **root:7QvbvBTvwPspUK** et de willow:U0ZZJLGYhNAT2s.
+Nous avons maintenant les crédentiels de **root:7QvbvBTvwPspUK** et de willow:U0ZZJLGYhNAT2s.
 
-Le contenu de root.txt nous dit que nous avons déjà reçu le root flag auparavant or a seule chose que nous ayons déjà reçue est le fichier user.jpg.
+Le contenu de root.txt nous dit que nous avons déjà reçu le root flag auparavant or la seule chose que nous ayons déjà reçue est le fichier user.jpg.
+
+### Root flag
+
+Utilisons steghide pour explorer le fichier user.jpg
+
+```
+┌──(kali㉿kali)-[~/THM/willow]
+└─$ steghide info user.jpg
+"user.jpg":
+  format: jpeg
+  capacity: 548.0 Byte
+Try to get information about embedded data ? (y/n) y
+Enter passphrase: 
+  embedded file "root.txt":
+    size: 34.0 Byte
+    encrypted: rijndael-128, cbc
+    compressed: yes
+                                                                                                                       
+┌──(kali㉿kali)-[~/THM/willow]
+└─$ steghide extract -sf user.jpg                                       
+Enter passphrase: 
+wrote extracted data to "root.txt".                                                                                                                 
+```
+
+Contenu de root.txt
+
+```
+┌──(kali㉿kali)-[~/THM/willow]
+└─$ cat root.txt
+THM{find_a_red_rose_on_the_grave}
+```
+
+And this complete the vote of the Belgian jury ☺️✌️
 
 ## \[Task 5] Réponses aux questions
 
 
 
 <table><thead><tr><th width="281">Question</th><th>Réponse</th></tr></thead><tbody><tr><td>User Flag:</td><td><pre><code>THM{beneath_the_weeping_willow_tree}
-</code></pre></td></tr><tr><td></td><td></td></tr></tbody></table>
+</code></pre></td></tr><tr><td>Root Flag:</td><td><pre><code>THM{find_a_red_rose_on_the_grave}
+</code></pre></td></tr></tbody></table>
