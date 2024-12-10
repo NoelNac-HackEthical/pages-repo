@@ -15,7 +15,7 @@ description: Challenge niveau medium du site TryHackMe
 
 Commençons les énumérations de façon classique avec Nmap et Gobuster.
 
-### [Nmap](outils.md#nmap)
+### 1. [Nmap](outils.md#nmap)
 
 ```sh
 nmap $IP -A -p- -oN nmap.txt -T4
@@ -40,7 +40,7 @@ Ce qui nous donne déjà une première réponse :
 
 <table><thead><tr><th width="626">Question</th><th>Réponse</th></tr></thead><tbody><tr><td>Use nmap to scan the network for all ports. How many ports are open?</td><td>4</td></tr></tbody></table>
 
-### [Gobuster](outils.md#gobuster)
+### 2. [Gobuster](outils.md#gobuster)
 
 ```sh
 gobuster dir -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -x ".php,.html,.txt" -u $IP -t50
@@ -77,7 +77,7 @@ Finished
 
 ```
 
-### Exploitation
+### 3. Exploitation
 
 Rendons-nous sur la page html du site avec Firefox
 
@@ -89,7 +89,7 @@ analysons le code source de la page
 
 comme recommandé dans le challenge, inspectons tous les scripts et en particulier **terminal.js**
 
-### code source de terminal.js
+### 4. code source de terminal.js
 
 ```javascript
 var data = [
@@ -134,7 +134,7 @@ for (var j = 0; j < allElements.length; j++) {
 
 <table><thead><tr><th width="574">Question</th><th>Réponse</th></tr></thead><tbody><tr><td>Who needs to make sure they update their default password?</td><td>boris</td></tr></tbody></table>
 
-### Cyber Chef
+### 5. Cyber Chef
 
 Le code source nous révèle un hash qui ressemble furieusement à des codes ASCII.
 
@@ -156,7 +156,7 @@ Ce qui nous donne la réponse à la question suivante.
 
 ## \[Task 2] Its mail time...
 
-### Firefox
+### 1. Firefox
 
 Essayons d'abord de nous connecter via Firefox avec l'utilisateur boris:InvincibleHack3r.
 
@@ -183,7 +183,7 @@ PASS InvincibleHack3r
 -ERR [AUTH] Authentication failed.
 ```
 
-### Hydra
+### 2. Hydra
 
 Comme les crédentiels de l'utilisateur boris ne fonctionnent pas pour le serveur pop3, le challenge suggère d'utiliser [Hydra](outils.md#hydra).
 
@@ -233,18 +233,18 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-10-05 04:56:
 
 ```
 
-### Utilisateurs pop3 trouvés jusqu'à présent
+### 3. Utilisateurs pop3 trouvés jusqu'à présent
 
 | Utilisateur | Password |
 | ----------- | -------- |
 | boris       | secret1! |
 | natalya     | bird     |
 
-### Réponses aux questions
+### 4. Réponses aux questions
 
 <table><thead><tr><th width="538">Questions</th><th>Réponses</th></tr></thead><tbody><tr><td>If those creds don't seem to work, can you use another program to find other users and passwords? Maybe Hydra?Whats their new password?</td><td>secret1!</td></tr><tr><td>Inspect port 55007, what services is configured to use this port?</td><td>telnet</td></tr><tr><td>What can you find on this service?</td><td>emails</td></tr><tr><td>What user can break Boris' codes?</td><td>natalya</td></tr></tbody></table>
 
-### Emails
+### 5. Emails
 
 #### Boris
 
@@ -381,7 +381,7 @@ Since you're a Linux user just point this servers IP to severnaya-station.com in
 
 ## \[Task 3] GoldenEye Operators Training
 
-### Modifier /etc/hosts
+### 1. Modifier /etc/hosts
 
 Comme indiqué dans le dernier email de natalya, modifions le fichier /etc/hosts pour y ajouter
 
@@ -391,7 +391,7 @@ Comme indiqué dans le dernier email de natalya, modifions le fichier /etc/hosts
 
 Rendons-nous ensuite sur la page severnaya-station.com/gnocertdir
 
-### Exploitation de la page severnaya-station.com/gnocertdir
+### 2. Exploitation de la page severnaya-station.com/gnocertdir
 
 <figure><img src=".gitbook/assets/gnocertdir01.png" alt=""><figcaption><p>login page</p></figcaption></figure>
 
@@ -504,7 +504,7 @@ For 007
 
 visiblement **eFdpbnRlcjE5OTV4IQ==** est un hash base64 (présence des deux == à la fin du hash) qui décodé (par exemple [cyberchef](https://gchq.github.io/CyberChef/) ou [dcode fr](https://www.dcode.fr/identification-chiffrement)) donne **xWinter1995x!**
 
-### Exploitation du login Administrateur
+### 3. Exploitation du login Administrateur
 
 Nous avons maintenant les crédentiels **admin:xWinter1995x!**
 
@@ -512,11 +512,11 @@ Retournons sur le site et connectons-nous en tant que admin et constatons que ce
 
 <figure><img src=".gitbook/assets/gnocertdir06.png" alt=""><figcaption><p>page login admin</p></figcaption></figure>
 
-### Réponses aux questions
+### 4. Réponses aux questions
 
 <table><thead><tr><th width="579">Questions</th><th>Réponses</th></tr></thead><tbody><tr><td>Try using the credentials you found earlier. Which user can you login as?</td><td>xenia</td></tr><tr><td>Have a poke around the site. What other user can you find?</td><td>doak</td></tr><tr><td>What was this users password?</td><td>goat</td></tr><tr><td>What is the next user you can find from doak?</td><td>dr_doak</td></tr><tr><td>What is this users password?</td><td>4England!</td></tr></tbody></table>
 
-### Prise pied dans la machine - reverse shell
+### 5. Prise pied dans la machine - reverse shell
 
 Cherchon la version de Moodle
 
@@ -532,7 +532,7 @@ Lançons une recherche Google d'exploits pour Moodle du style « **search exploi
 
 Un passage par la base de données des exploits de [Rapid7](https://www.rapid7.com/db/vulnerabilities/moodle-cve-2021-21809/) confirme la vulnérabilité et donne la marche à suivre dans l'annexe suivante :
 
-[https://talosintelligence.com/vulnerability\_reports/TALOS-2021-1277](https://talosintelligence.com/vulnerability\_reports/TALOS-2021-1277)
+[https://talosintelligence.com/vulnerability\_reports/TALOS-2021-1277](https://talosintelligence.com/vulnerability_reports/TALOS-2021-1277)
 
 "_To exploit the shell injection vulnerability, the administrator **sets a path to the legacy server-side spellcheck binary (aspellpath) containing a backtick shell injection** and **sets PSpellShell as the spellchecking engine**. When a server-side spellcheck is requested, lib/editor/tinymce/plugins/spellchecker/classes/PSpellShell.php uses aspellpath to unsafely construct a shell\_exec command. The spellchecker plugin does not have to be enabled._"
 
@@ -584,7 +584,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 
 [Transférons les fichiers nécessaires de la machine Kali vers la machine cible](outils.md#transfert-de-fichiers) et utilisons [ma méthode générique d'analyse des possibilités de 'privilege escalation'.](outils.md#privilege-escalation)
 
-### sudo -l
+### 1. sudo -l
 
 ```
 www-data@ubuntu:/dev/shm$ sudo -l
@@ -594,13 +594,13 @@ sudo -l
 
 Inexploitable
 
-### [suid3num.py](outils.md#privilege-escalation)
+### 2. [suid3num.py](outils.md#privilege-escalation)
 
 <figure><img src=".gitbook/assets/suid3num-01.png" alt=""><figcaption><p>suid3num.py</p></figcaption></figure>
 
 Rien d'exploitable à première vue
 
-### [LES (Linux-Exploit-Suggester)](outils.md#privilege-escalation)
+### 3. [LES (Linux-Exploit-Suggester)](outils.md#privilege-escalation)
 
 Bien que le challenge nous indique d'utiliser la vulnérabilité OverlayFs, je préfère rester plus générique dans mon analyse et utiliser l'outil **les.sh.**
 
@@ -608,7 +608,7 @@ Voici le résultat de **les.sh** suggérant des vulnérabilités exploitables da
 
 <figure><img src=".gitbook/assets/les-total.png" alt=""><figcaption><p>Linux Exploits Suggester</p></figcaption></figure>
 
-### Kernel version
+### 4. Kernel version
 
 ```
 www-data@ubuntu:/dev/shm$ uname -a
@@ -617,14 +617,14 @@ www-data@ubuntu:/dev/shm$
 
 ```
 
-### Vunérabilités trouvées
+### 5. Vunérabilités trouvées
 
 Les deux premières vulnérabilités de la liste (et donc les plus probables) sont:
 
 * DirtyCow
 * OverlayFs
 
-### Commençons par DirtyCow
+### 6. Commençons par DirtyCow
 
 les.sh nous suggère [https://www.exploit-db.com/exploits/40611](https://www.exploit-db.com/exploits/40616). La lecture du mode d'emploi de l'exploit n'est pas évidente...
 
@@ -742,7 +742,7 @@ Allons à la page /006-final/xvf7-flag/ et <mark style="color:red;">**boom...**<
 
 <figure><img src=".gitbook/assets/flag.png" alt=""><figcaption></figcaption></figure>
 
-### Réponses aux questions
+### 7. Réponses aux questions
 
 | Question                  | Réponse                          |
 | ------------------------- | -------------------------------- |
