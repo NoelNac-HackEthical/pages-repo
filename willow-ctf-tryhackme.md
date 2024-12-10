@@ -15,7 +15,7 @@ _"What lies under the Willow Tree?_"
 
 Commençons les énumérations de façon classique avec Nmap et Gobuster.
 
-### [Nmap](outils.md#nmap)
+### 1. [Nmap](outils.md#nmap)
 
 ```
 ┌──(kali㉿kali)-[~/THM/willow]
@@ -92,7 +92,7 @@ Nmap done: 1 IP address (1 host up) scanned in 33.34 seconds
 
 Nous constatons qu'en plus du **port 22/tcp open ssh** et du **port 80/tcp open http**, nous touvons le port **2049/tcp open nfs** qui nous indique une possibilité de partage de fichiers via le réseau.
 
-### [Gobuster](outils.md#gobuster)
+### 2. [Gobuster](outils.md#gobuster)
 
 <pre><code>┌──(kali㉿kali)-[~/THM/willow]
 └─$ gobuster dir -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -x ".php,.html,.txt,.zip" -u http://$IP -t 200
@@ -126,7 +126,7 @@ L'énumération Gobuster ne nous mène à rien.
 
 ## \[Task 2] Exploitation
 
-### Exploitation de la première page
+### 1. Exploitation de la première page
 
 Rendons-nous sur le site
 
@@ -154,7 +154,7 @@ Nous pouvons constater que le code résultant pourrait bien correspondre à une 
 
 Profitons-en pour nettoyer le fichier first-page.txt de sa première ligne pour conserver uniquement les data que nous sauvegardons dans un fichier private-key.tx
 
-### Exploitation du port NFS
+### 2. Exploitation du port NFS
 
 Nmap nous a montré que le port 2049/tcp open nfs était ouvert et qu'il existait une possiblité de partage de fichiers via le réseau.&#x20;
 
@@ -196,7 +196,7 @@ Private Key Pair: (61527, 37627)
 
 Nous avons maintenant à notre disposition deux paires de clés RSA
 
-### Décodage RSA
+### 3. Décodage RSA
 
 Commençons par nous intéresser au codage décodage comme présenté dans le site[ https://muirlandoracle.co.uk/2020/01/29/rsa-encryption/](https://muirlandoracle.co.uk/2020/01/29/rsa-encryption/) donné en indice
 
@@ -281,7 +281,7 @@ Faisons un copier coller vers un fichier id\_rsa ( ou **python3 decode\_rsa.py >
 
 Remarquons au passage que la clé est **Proc-Type: 4,ENCRYPTED** et qu'il nous faudra donc utiliser **John The Ripper** pour pouvoir l'utiliser.
 
-### Alternative de décodage RSA
+### 4. Alternative de décodage RSA
 
 Nous aurions tout aussi bien pu utiliser un calculateur RSA en ligne sans trop se préoccuper du mécanisme codage/décodage RSA comme nous l'avons fait.
 
@@ -291,7 +291,7 @@ Le [RSA Express Encryption/Decryption Calculator](https://www.cs.drexel.edu/~pop
 
 ## \[Task 3] Prise pied sur la machine cible
 
-### Décryptage de la clé SSH
+### 1. Décryptage de la clé SSH
 
 ```
 ┌──(kali㉿kali)-[~/THM/willow]
@@ -314,7 +314,7 @@ Session completed.
 
 Nous avons maintenant un utilisateur **willow** avec sa clé privée **id\_rsa** dont le password est **wildflower**
 
-### Prise pied sur la machine cible
+### 2. Prise pied sur la machine cible
 
 ```
 ┌──(kali㉿kali)-[~/THM/willow]
@@ -382,7 +382,7 @@ THM{beneath_the_weeping_willow_tree}
 
 ## \[Task 4] Escalade de privilèges
 
-### Sudo -l
+### 1. Sudo -l
 
 ```
 willow@willow-tree:~$ sudo -l
@@ -445,7 +445,7 @@ Nous avons maintenant les crédentiels de **root:7QvbvBTvwPspUK** et de willow:U
 
 Le contenu de root.txt nous dit que nous avons déjà reçu le root flag auparavant or la seule chose que nous ayons déjà reçue est le fichier user.jpg.
 
-### Root flag
+### 2. Root flag
 
 Utilisons steghide pour explorer le fichier user.jpg
 
@@ -476,7 +476,7 @@ Contenu de root.txt
 THM{find_a_red_rose_on_the_grave}
 ```
 
-_<mark style="color:orange;">And this complete the vote of the Belgian jury</mark>_ ☺️✌️
+_<mark style="color:orange;">**And this complete the vote of the Belgian jury**</mark>_ ☺️✌️
 
 ## \[Task 5] Réponses aux questions
 
