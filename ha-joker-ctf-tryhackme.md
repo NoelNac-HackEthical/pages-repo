@@ -15,7 +15,7 @@ description: Challenge niveau medium du site TryHackMe
 
 Commençons comme d'habitude avec les classiques Nmap et Gobuster
 
-### [Nmap](outils.md#nmap)
+### 1. [Nmap](outils.md#nmap)
 
 ```bash
 ┌──(kali㉿kali)-[~/THM/joker]
@@ -66,7 +66,7 @@ Nmap done: 1 IP address (1 host up) scanned in 40.97 seconds
 
 ```
 
-### [Gobuster](outils.md#gobuster)
+### 2. [Gobuster](outils.md#gobuster)
 
 ```
 gobuster dir -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -x ".php,.html,.txt" -u $IP -t50 
@@ -110,7 +110,7 @@ Finished
 
 Ces deux scans nous permettre de répondre aux premières questions du challenge.
 
-### Réponses aux questions
+### 3. Réponses aux questions
 
 <table><thead><tr><th width="583">Question</th><th>Réponse</th></tr></thead><tbody><tr><td>What version of Apache is it?</td><td>2.4.29</td></tr><tr><td>What port on this machine not need to be authenticated by user and password?</td><td>80</td></tr><tr><td>There is a file on this port that seems to be secret, what is it?</td><td>secret.txt</td></tr><tr><td>There is another file which reveals information of the backend, what is it?</td><td>phpinfo.php</td></tr><tr><td>When reading the secret file, We find with a conversation that seems contains at least two users and some keywords that can be intersting, what user do you think it is?</td><td>joker</td></tr><tr><td>What port on this machine need to be authenticated by Basic Authentication Mechanism?</td><td>8080</td></tr></tbody></table>
 
@@ -122,7 +122,7 @@ Voici l'écran de 'Login' que nous allons attaquer
 
 <figure><img src=".gitbook/assets/login_8080.png" alt=""><figcaption><p>Ecran de login</p></figcaption></figure>
 
-### Burp
+### 1. Burp
 
 Lançons Burp avec "Proxy Interception" sur "on" et entrons "joker" et "password".
 
@@ -132,7 +132,7 @@ Nous constatons que la validation du login est du type **basic user:password en 
 
 Nous pouvons alors lancer [hydra en mode http-get](https://0xshin.hashnode.dev/basic-http-authentication-and-brute-forcing-w-hydra)
 
-### [Hydra](outils.md#hydra)
+### 2. [Hydra](outils.md#hydra)
 
 ```sh
 ┌──(kali㉿kali)-[~/THM]
@@ -151,7 +151,7 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-11-11 16:35:
 
 Maintenant que nous avons l'utilisateur **joker** avec son password **hannah**, nous pouvons lacer une exploration plus poussée du site en port 8080 avec Nikto et Gobuster.
 
-### Nikto
+### 3. Nikto
 
 ```sh
 ┌──(kali㉿kali)-[~/THM]
@@ -215,7 +215,7 @@ Pour nous simplifie la vie, nous pouvons filtrer les résultats et ne montrer qu
 + /tmp/: This might be interesting.
 ```
 
-### Gobuster
+### 4. Gobuster
 
 ```
 ┌──(kali㉿kali)-[~/THM]
@@ -278,7 +278,7 @@ Finished
 
 Dans les deux cas, nous détectons la présence d'un répertoire '**/administrator/**' ainsi que l'existence d'un fichier '**backup.zip**' comme évoqués dans le challenge.&#x20;
 
-### John The Ripper
+### 5. John The Ripper
 
 Téléchargeons le fichier **backup.zip** et attaquons-le avec **John The Ripper**
 
@@ -355,7 +355,7 @@ Session completed.
 
 Nous pouvons désormais répondre à toute une série de questions et toutes ces infos vont nous permettre de prendre pied sur la machine cible dans la phase d'exploitation.
 
-### Réponse aux questions (suite)
+### 6. Réponse aux questions (suite)
 
 <table><thead><tr><th width="580">Question</th><th>Réponse</th></tr></thead><tbody><tr><td>At this point we have one user and a url that needs to be aunthenticated, brute force it to get the password, what is that password?</td><td>hannah</td></tr><tr><td>Yeah!! We got the user and password and we see a cms based blog. Now check for directories and files in this port. What directory looks like as admin directory?</td><td>/administrator/</td></tr><tr><td>We need access to the administration of the site in order to get a shell, there is a backup file, What is this file?</td><td>backup.zip</td></tr><tr><td>We have the backup file and now we should look for some information, for example database, configuration files, etc ... But the backup file seems to be encrypted. What is the password?</td><td>hannah</td></tr><tr><td>Remember that... We need access to the administration of the site... Blah blah blah. In our new discovery we see some files that have compromising information, maybe db? ok what if we do a restoration of the database! Some tables must have something like user_table! What is the super duper user?</td><td>admin</td></tr><tr><td>Super Duper User! What is the password?</td><td>abcd1234</td></tr></tbody></table>
 
@@ -404,11 +404,11 @@ www-data@ubuntu:/$
 
 Comme à chaque fois, [consolidons ce shell](outils.md#consolidation-dun-shell)
 
-## \[Task 4] Escalade des privilèges
+## \[Task 4] Escalade des privilèges \[lxd]
 
 A priori nous devrions passer par[ ma méthode d'escalade des privilèges habituelle](outils.md#privilege-escalation) mais comme nous avons constaté que l'utilisateur courant \[www-data] était membre du groupe **\[lxd], n**ous allons pouvoir faire [une escalade de privilèges en utilisant une faille dans la mise en place de conteneurs LXD](outils.md#escalade-de-privileges-via-lxd)
 
-### Sur la machine Kali
+### 1. Sur la machine Kali
 
 ```
 ┌──(kali㉿kali)-[~/THM/joker]
@@ -459,7 +459,7 @@ Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
 
 ```
 
-### Sur la machine cible
+### 2. Sur la machine cible
 
 ```
 www-data@ubuntu:/$ cd /dev/shm
@@ -550,7 +550,7 @@ Aarti Singh: https://in.linkedin.com/in/aarti-singh-353698114
 /mnt/root/root # 
 ```
 
-### Réponse à la dernière question
+### 3. Réponse à la dernière question
 
 <table><thead><tr><th width="541">Question</th><th>Réponse</th></tr></thead><tbody><tr><td>What is the name of the file in the /root directory?</td><td>final.txt</td></tr></tbody></table>
 
