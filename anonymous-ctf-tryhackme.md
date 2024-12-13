@@ -206,6 +206,10 @@ local: to_do.txt remote: to_do.txt
 ftp>
 ```
 
+```
+-rwxr-xrwx    1 1000     1000          314 Jun 04  2020 clean.sh
+```
+
 
 
 
