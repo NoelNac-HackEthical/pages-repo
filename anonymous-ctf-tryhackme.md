@@ -100,14 +100,113 @@ Nous trouvons un **FTP anonymous** en 21 et la présence du **service SMB** en 1
 ### 2. SMB
 
 ```
-smbclient -L $IP
+┌──(kali㉿kali)-[~/THM/anonymous]
+└─$ smbclient -L $IP -N
+
+	Sharename       Type      Comment
+	---------       ----      -------
+	print$          Disk      Printer Drivers
+	pics            Disk      My SMB Share Directory for Pics
+	IPC$            IPC       IPC Service (anonymous server (Samba, Ubuntu))
+Reconnecting with SMB1 for workgroup listing.
+
+	Server               Comment
+	---------            -------
+
+	Workgroup            Master
+	---------            -------
+	WORKGROUP            ANONYMOUS
+```
+
+Nous avons trouvé un share appelé **pics,** voyons ce qu'il contient
+
+```
+┌──(kali㉿kali)-[~/THM/anonymous]
+└─$ smbclient //$IP/pics -N
+Try "help" to get a list of possible commands.
+smb: \> ls
+  .                                   D        0  Sun May 17 13:11:34 2020
+  ..                                  D        0  Thu May 14 03:59:10 2020
+  corgo2.jpg                          N    42663  Tue May 12 02:43:42 2020
+  puppos.jpeg                         N   265188  Tue May 12 02:43:42 2020
+
+		20508240 blocks of size 1024. 13306812 blocks available
+
+```
+
+Le partage (share smb) contient deux fichiers images. J'ai téléchargé (get) les deux images et je les ai travaillées avec les [outils de stéganographie](outils.md#id-8.-outils-steganographie) les plus connus et je n'ai rien trouvé ! J'ai perdu un certain temps pour me rendre compte que finalement cela ne menait à rien, ce que les anglo-saxons appèllent un 'Rabbit Hole' .
+
+### 3. Réponses aux questions jusqu'à présent
+
+<table><thead><tr><th width="495">Questions</th><th>Réponses</th></tr></thead><tbody><tr><td>Enumerate the machine. How many ports are open?</td><td>4</td></tr><tr><td>What service is running on port 21?</td><td>FTP</td></tr><tr><td>What service is running on ports 139 and 445?</td><td>SMB</td></tr><tr><td>There's a share on the user's computer.  What's it called?</td><td>pics</td></tr></tbody></table>
+
+## \[Task 2] Exploitation
+
+### 1. Port 21 - FTP anonymous
+
+Nmap nous a montré que le port 21 supportait le FTP anonyme. Conectons-nous avec l'utilisateur 'anonymous' et un mot de passe vide.
+
+```
+┌──(kali㉿kali)-[~/THM/anonymous]
+└─$ ftp $IP
+Connected to 10.10.166.173.
+220 NamelessOne's FTP Server!
+Name (10.10.166.173:kali): anonymous
+331 Please specify the password.
+Password: 
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp> 
+```
+
+Explorons le répertoire
+
+```
+ftp> dir
+229 Entering Extended Passive Mode (|||51479|)
+150 Here comes the directory listing.
+drwxrwxrwx    2 111      113          4096 Jun 04  2020 scripts
+226 Directory send OK.
+ftp> cd scripts
+250 Directory successfully changed.
+ftp> dir
+229 Entering Extended Passive Mode (|||22147|)
+150 Here comes the directory listing.
+-rwxr-xrwx    1 1000     1000          314 Jun 04  2020 clean.sh
+-rw-rw-r--    1 1000     1000         2193 Dec 13 15:45 removed_files.log
+-rw-r--r--    1 1000     1000           68 May 12  2020 to_do.txt
+226 Directory send OK.
+```
+
+Et téléchargeons les fichiers trouvés
+
+```
+ftp> get clean.sh
+local: clean.sh remote: clean.sh
+229 Entering Extended Passive Mode (|||13395|)
+150 Opening BINARY mode data connection for clean.sh (314 bytes).
+100% |**************************************************************************|   314      162.15 KiB/s    00:00 ETA
+226 Transfer complete.
+314 bytes received in 00:00 (11.29 KiB/s)
+ftp> get removed_files.log
+local: removed_files.log remote: removed_files.log
+229 Entering Extended Passive Mode (|||17137|)
+150 Opening BINARY mode data connection for removed_files.log (2236 bytes).
+100% |**************************************************************************|  2236       15.01 MiB/s    00:00 ETA
+226 Transfer complete.
+2236 bytes received in 00:00 (91.60 KiB/s)
+ftp> get to_do.txt
+local: to_do.txt remote: to_do.txt
+229 Entering Extended Passive Mode (|||44674|)
+150 Opening BINARY mode data connection for to_do.txt (68 bytes).
+100% |**************************************************************************|    68      289.98 KiB/s    00:00 ETA
+226 Transfer complete.
+68 bytes received in 00:00 (2.64 KiB/s)
+ftp>
 ```
 
 
-
-### 3. Réponses aux questions
-
-<table><thead><tr><th width="495">Questions</th><th>Réponses</th></tr></thead><tbody><tr><td>Enumerate the machine. How many ports are open?</td><td>4</td></tr><tr><td>What service is running on port 21?</td><td>FTP</td></tr><tr><td>What service is running on ports 139 and 445?</td><td>SMB</td></tr><tr><td>There's a share on the user's computer.  What's it called?</td><td>pics</td></tr></tbody></table>
 
 
 
