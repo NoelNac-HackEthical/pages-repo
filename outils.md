@@ -151,6 +151,16 @@ cd /mnt/root
 
 ### 8. Outils Stéganographie
 
+Pour trouver le mot de passe et extraire le fichier caché
+
+```
+stegseek image.jpg
+```
+
+```
+// Some code
+```
+
 Voici un lien vers une liste d'outils de stéganographie que j'utilise souvent
 
 [https://medium.com/@ria.banerjee005/steganography-tools-techniques-bba3f95c7148](https://medium.com/@ria.banerjee005/steganography-tools-techniques-bba3f95c7148)
