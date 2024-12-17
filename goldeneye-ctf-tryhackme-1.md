@@ -788,7 +788,7 @@ creating shared library
 uid=0(root) gid=0(root) groups=0(root),24(cdrom),30(dip),46(plugdev),1000(user)
 ```
 
-Comme pour [DirtyCow](broken-reference), il ne faut pas se soucier des warnings.
+Comme pour [DirtyCow](goldeneye-ctf-tryhackme-1.md#id-6.-commencons-par-dirtycow), il ne faut pas se soucier des warnings.
 
 Voici ce que cela donne:
 
