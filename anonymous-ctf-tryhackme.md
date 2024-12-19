@@ -407,7 +407,7 @@ root
 | user.txt  | 90d6f992585815ff991e68748c414740 |
 | root.txt  | 4d930091c31a622a7ed10f27999af363 |
 
-## Bonus
+## Bonus LXD
 
 Si nous analysons les groupes dont namelessone fait partie, nous remarquons qu'il est membre du groupe **lxd**
 
